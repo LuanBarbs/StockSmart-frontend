@@ -38,6 +38,7 @@ export default function Login() {
                         value={id}
                         onChange={(e) => setId(e.target.value)}
                         className={styles.input}
+                        required
                     />
 
                     <label>Sua senha*</label>
@@ -47,6 +48,7 @@ export default function Login() {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         className={styles.input}
+                        required
                     />
 
                     <button type="submit" className={styles.button}>

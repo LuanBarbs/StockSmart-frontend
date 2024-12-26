@@ -1,0 +1,121 @@
+.container {
+  padding: 20px;
+}
+
+.tabs {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.tabButton {
+    padding: 10px 20px;
+    cursor: pointer;
+    background-color: var(--orange);
+    border: 1px solid var(--darkOrange);
+    font-size: 18px;
+    border-radius: 5px;
+}
+
+.content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.formContainer, .usersContainer {
+    width: 45%;
+    background-color: var(--darkGray);
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    animation: slide-down 0.5s ease;
+}
+
+.fullFormContainer, .fullUsersContainer {
+    width: 70%;
+    background-color: var(--darkGray);
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    animation: slide-down 0.5s ease;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form label {
+    margin-top: 10px;
+    margin-bottom: 5px;
+    font-size: 18px;
+}
+
+.form input {
+    margin-bottom: 20px;
+    height: 6vh;
+    text-align: left;
+    font-size: 16px;
+    border: 1px solid #2c2c2c;
+    border-radius: 10px;
+    background-color: var(--gray);
+    color: var(--beige);
+}
+
+.form input:focus {
+    outline: none;
+    border-color: var(--orange);
+}
+
+.form select {
+    margin-bottom: 20px;
+    height: 6vh;
+    text-align: left;
+    font-size: 16px;
+    border: 1px solid #2c2c2c;
+    border-radius: 10px;
+    background-color: var(--gray);
+    color: var(--beige);
+}
+
+.form select:focus {
+    outline: none;
+    border-color: var(--orange);
+}
+
+.form button {
+    align-self: center;
+    width: 40%;
+    padding: 10px;
+    border: none;
+    border-radius: 15px;
+    background-color: var(--orange);
+    color: var(--beige);
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.form button:hover {
+    background-color: var(--darkOrange);
+}
+
+.eyeButton {
+    cursor: pointer;
+    background: none;
+    border: none;
+}
+
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

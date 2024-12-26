@@ -10,6 +10,10 @@
     color: var(--orange);
 }
 
+.logo span {
+    color: var(--lightGray)
+}
+
 .navbar {
     display: flex;
     flex-direction: row;
@@ -41,6 +45,10 @@
 .intro h1 {
     font-size: 2.5rem;
     color: var(--orange);
+}
+
+.intro h1 span {
+    color: var(--lightGray)
 }
 
 .intro p {

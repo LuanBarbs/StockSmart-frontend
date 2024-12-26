@@ -6,7 +6,7 @@ export default function Home() {
     <>
       <header className={styles.header}>
         <nav className={styles.navbar}>
-          <div className={styles.logo}>SmartStock</div>
+          <div className={styles.logo}><span>Smart</span>Stock</div>
           <div className={styles.navLinks}>
             <button className={styles.loginButton} onClick={() => window.location.href = '/login'}>
               Entrar
@@ -16,7 +16,7 @@ export default function Home() {
       </header>
       <main className={styles.main}>
         <section className={styles.intro}>
-          <h1>Bem-vindo ao SmartStock</h1>
+          <h1>Bem-vindo ao <span>Smart</span>Stock</h1>
           <p>O sistema simplificado de WMS para gerenciar estoque de forma eficiente e prática.</p>
         </section>
         <section className={styles.cardsTitle}>
