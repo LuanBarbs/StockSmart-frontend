@@ -1,0 +1,92 @@
+/* Header e Navbar */
+.header {
+    padding: 1rem 2rem;
+    border-bottom: 1px solid var(--gray);
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--orange);
+}
+
+.navbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.loginButton {
+    background-color: var(--orange);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: medium;
+}
+
+.loginButton:hover {
+    background-color: var(--darkOrange); /* Laranja mais escuro no hover */
+}
+
+/* Seção de Introdução */
+.main {
+    text-align: center;
+    padding: 2rem 1rem;
+}
+
+.intro h1 {
+    font-size: 2.5rem;
+    color: var(--orange);
+}
+
+.intro p {
+    font-size: 1.2rem;
+    color: var(--gray);
+    margin-top: 0.5rem;
+}
+
+/* Cards de Funcionalidades */
+.cards {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.cardsTitle {
+    padding-top: 20px;
+}
+
+.card {
+    background-color: var(--black2);
+    border-radius: 10px;
+    padding: 1.5rem;
+    text-align: center;
+    width: 250px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    color: var(--black);
+}
+
+.card h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: var(--orange);
+}
+
+.card p {
+    font-size: 1rem;
+    color: var(--beige);
+}
+
+/* Footer */
+.footer {
+    background-color: var(--black);
+    color: var(--gray);
+    text-align: center;
+    padding: 1rem 0;
+    border-top: 1px solid var(--gray);
+}
