@@ -4,8 +4,10 @@
     --orange: #e56102;
     --darkOrange: #994102;
     --white: #ffffff;
-    --gray: #aaaaaa;
-    --beige: #f5f5dc;
+    --lightGray: #aaaaaa;
+    --gray: #2c2c2c;
+    --darkGray: #1f1f1f;
+    --beige: #f1f1b1;
 }
   
 body {

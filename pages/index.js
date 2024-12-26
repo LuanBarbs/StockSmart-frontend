@@ -16,7 +16,7 @@ export default function Home() {
       </header>
       <main className={styles.main}>
         <section className={styles.intro}>
-          <h1>Bem-vindos ao SmartStock</h1>
+          <h1>Bem-vindo ao SmartStock</h1>
           <p>O sistema simplificado de WMS para gerenciar estoque de forma eficiente e prática.</p>
         </section>
         <section className={styles.cardsTitle}>

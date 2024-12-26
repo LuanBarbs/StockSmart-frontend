@@ -1,7 +1,7 @@
 /* Header e Navbar */
 .header {
     padding: 1rem 2rem;
-    border-bottom: 1px solid var(--gray);
+    border-bottom: 1px solid var(--lightGray);
 }
 
 .logo {
@@ -45,7 +45,7 @@
 
 .intro p {
     font-size: 1.2rem;
-    color: var(--gray);
+    color: var(--beige);
     margin-top: 0.5rem;
 }
 
@@ -85,8 +85,8 @@
 /* Footer */
 .footer {
     background-color: var(--black);
-    color: var(--gray);
+    color: var(--lightGray);
     text-align: center;
     padding: 1rem 0;
-    border-top: 1px solid var(--gray);
+    border-top: 1px solid var(--lightGray);
 }
