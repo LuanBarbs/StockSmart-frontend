@@ -23,7 +23,7 @@
     justify-content: space-around;
 }
 
-.formContainer, .usersContainer {
+.formContainer, .warehousesContainer {
     width: 45%;
     background-color: var(--darkGray);
     padding: 20px;
@@ -32,7 +32,7 @@
     animation: slide-down 0.5s ease;
 }
 
-.fullFormContainer, .fullUsersContainer {
+.fullFormContainer, .fullWarehousesContainer {
     width: 70%;
     background-color: var(--darkGray);
     padding: 20px;
@@ -68,22 +68,6 @@
     border-color: var(--orange);
 }
 
-.form select {
-    margin-bottom: 20px;
-    height: 6vh;
-    text-align: left;
-    font-size: 16px;
-    border: 1px solid #2c2c2c;
-    border-radius: 10px;
-    background-color: var(--gray);
-    color: var(--beige);
-}
-
-.form select:focus {
-    outline: none;
-    border-color: var(--orange);
-}
-
 .form button {
     align-self: center;
     width: 40%;
@@ -103,7 +87,7 @@
     background-color: var(--darkOrange);
 }
 
-.userBox {
+.warehouseBox {
     display: flex;
     align-items: center;
     padding: 4px 4px 4px 15px;
@@ -210,21 +194,6 @@
 }
 
 .modalContent form input:focus {
-    outline: none;
-    border-color: var(--orange);
-}
-
-.modalContent form select {
-    height: 6vh;
-    text-align: left;
-    font-size: 16px;
-    border: 1px solid #2c2c2c;
-    border-radius: 10px;
-    background-color: var(--gray);
-    color: var(--beige);
-}
-
-.modalContent form select:focus {
     outline: none;
     border-color: var(--orange);
 }

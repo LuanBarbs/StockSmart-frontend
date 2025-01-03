@@ -11,7 +11,7 @@ export default function Login() {
         if(id === "0" && password === "admin") {
             router.push("/initAdmin");
         } else if(id === "1" && password === "gerente") {
-            router.push("/gerente");
+            router.push("/initManager");
         } else if(id === "2" && password === "funcionario") {
             router.push("/funcionario");
         } else {

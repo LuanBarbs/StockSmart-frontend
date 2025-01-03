@@ -6,7 +6,7 @@ import { FaEye, FaBars, FaUserCircle, FaTrash, FaEdit } from "react-icons/fa";
 import User from "../models/User";
 
 export default function initAdmin() {
-    const [showForm, setShowForm] = useState(false);
+    const [showForm, setShowForm] = useState(true);
     const [showUsers, setShowUsers] = useState(false);
     const [modalVisibile, setModalVisible] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
@@ -40,22 +40,10 @@ export default function initAdmin() {
         setEditModalOpen(true);
     };
 
-    useEffect(() => {
-        // Carregar gerentes e usuários do AsyncStorage ao iniciar
-        const loadData = async () => {
-          try {
-            const storedUsers = await AsyncStorage.getItem('users');
-            setUsers(storedUsers ? JSON.parse(storedUsers) : []);
-          } catch (error) {
-            console.error("Erro ao carregar dados do AsyncStorage:", error);
-          }
-        };
-        loadData();
-    }, []);
-
     const handleAddUser = async () => {
         const newUser = new User(
-            users.length + 1, name, cpf, address, phone, email, position, password);
+            users.length + 1, name, cpf, address, phone, email, position, password
+        );
 
         if(isDuplicate(newUser.cpf, newUser.email)) {
             alert("Erro: CPF ou email já registrados no sistema!");
@@ -99,12 +87,26 @@ export default function initAdmin() {
         );
     };
 
+    // Carregar usuários do AsyncStorage ao iniciar.
+    useEffect(() => {
+        const loadData = async () => {
+            try {
+                const storedUsers = await AsyncStorage.getItem('users');
+                setUsers(storedUsers ? JSON.parse(storedUsers) : []);
+            } catch (error) {
+                console.error("Erro ao carregar dados do AsyncStorage:", error);
+            }
+        };
+
+        loadData();
+    }, []);
+
     return (
         <main className={styles.container}>
             <section className={styles.tabs}>
                 <button onClick={handleToggleForm} className={styles.tabButton}>Cadastrar Usuário</button>
                 <button onClick={handleToggleUsers} className={styles.tabButton}>
-                    Visualizar Usuários <FaBars />
+                    Gerenciar Usuários <FaBars />
                 </button>
             </section>
             <section className={styles.content}>
@@ -188,8 +190,8 @@ export default function initAdmin() {
                         <hr color="#f1f1b1" size="5"/>
                         <ul>
                             {users.length != 0 && (
-                                users.map((user) => (
-                                    <li className={styles.userBox}>
+                                users.map((user, index) => (
+                                    <li key={index} className={styles.userBox}>
                                         <span>{user.id} - Nome: {user.name}</span>
                                         <button 
                                             className={styles.eyeButton}
