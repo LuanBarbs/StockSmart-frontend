@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import styles from "../styles/InitManager.module.css";
+import styles from "../styles/initEmployee.module.css";
 
 // Importação de componentes.
-import ManageWarehouses from "../components/manager/ManageWarehouses";
+import ManageItems from "../components/employee/ManageItems";
 
-export default function initManager() {
+export default function initEmployee() {
     const [activeFeature, setActiveFeature] = useState("default");
 
     const handleMenuClick = (featureName) => {
@@ -13,8 +13,8 @@ export default function initManager() {
 
     const renderFeature = () => {
         switch(activeFeature) {
-            case "GCD":
-                return <ManageWarehouses />;
+            case "GCI":
+                return <ManageItems />;
             case "RM":
                 return <h2>Ainda não está pronto</h2>;
             default:
@@ -28,17 +28,19 @@ export default function initManager() {
             <aside className={styles.drawer}>
                 <h2>Menu</h2>
                 <ul>
-                    <li onClick={() => handleMenuClick("GCD")}>Gerenciar Cadastro de Depósitos</li>
-                    <li onClick={() => handleMenuClick("DRA")}>Definir Regras de Armazenagem</li>
-                    <li onClick={() => handleMenuClick("DPE")}>Definir Prioridades de Embarque</li>
-                    <li onClick={() => handleMenuClick("GRS")}>Gerar Relatório Simplificado</li>
+                    <li onClick={() => handleMenuClick("GCI")}>Gerenciar Cadastro de Itens</li>
+                    <li onClick={() => handleMenuClick("RM")}>Receber de Mercadorias</li>
+                    <li onClick={() => handleMenuClick("SCD")}>Simular Cross-Docking</li>
+                    <li onClick={() => handleMenuClick("MI")}>Movimentar Itens</li>
+                    <li onClick={() => handleMenuClick("SI")}>Separar Itens</li>
+                    <li onClick={() => handleMenuClick("RA")}>Registrar Avarias</li>
+                    <li onClick={() => handleMenuClick("GCM")}>Gerenciar Caminho de Mercadorias</li>
                     <li onClick={() => handleMenuClick("CH")}>Consultar Histórico</li>
-                    <li onClick={() => handleMenuClick("FO")}>Fechar Operações</li>
                 </ul>
             </aside>
 
             {/* Área de Conteúdo */}
-            <main className={styles.mainContent}>
+            <main className={styles.content}>
                 {renderFeature()}
             </main>
         </div>

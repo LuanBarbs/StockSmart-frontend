@@ -1,0 +1,48 @@
+.container {
+    display: flex;
+    height: 110vh;
+    font-family: Arial, sans-serif;
+}
+
+.drawer {
+    width: 250px;
+    background-color: var(--darkGray);
+    color: var(--white);
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.drawer h2 {
+    text-align: center;
+    color: var(--orange);
+    margin-bottom: 20px;
+}
+
+.drawer ul {
+    list-style: none;
+    padding: 0;
+}
+
+.drawer li {
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.drawer li:hover {
+    background-color: var(--orange);
+    color: var(--black)
+}
+
+.content {
+    flex-grow: 1;
+    background-color: var(--lightGray);
+    padding: 20px;
+}
+  
+.content h1 {
+    color: var(--darkGray);
+    font-size: 2em;
+}

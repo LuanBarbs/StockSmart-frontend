@@ -13,7 +13,7 @@ export default function Login() {
         } else if(id === "1" && password === "gerente") {
             router.push("/initManager");
         } else if(id === "2" && password === "funcionario") {
-            router.push("/funcionario");
+            router.push("/initEmployee");
         } else {
             alert("ID ou senha incorretos!");
         }

@@ -1,4 +1,53 @@
 .container {
+    display: flex;
+    height: 150vh;
+    font-family: Arial, sans-serif;
+}
+
+.drawer {
+    width: 250px;
+    background-color: var(--darkGray);
+    color: var(--white);
+    padding: 15px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.drawer h2 {
+    text-align: center;
+    color: var(--orange);
+    margin-bottom: 30px;
+}
+
+.drawer ul {
+    list-style: none;
+    padding: 0;
+}
+
+.drawer li {
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.drawer li:hover {
+    background-color: var(--orange);
+    color: var(--black)
+}
+
+.mainContent {
+    flex-grow: 1;
+    background-color: var(--lightGray);
+    padding: 20px;
+}
+  
+.mainContent h1 {
+    color: var(--darkGray);
+    font-size: 2em;
+}
+
+.wContainer {
     padding: 20px;
 }
 
@@ -17,10 +66,24 @@
     border-radius: 5px;
 }
 
+.tabButton:hover {
+    padding: 10px 20px;
+    cursor: pointer;
+    background-color: var(--darkOrange);
+    border: 1px solid var(--darkOrange);
+    font-size: 18px;
+    border-radius: 5px;
+}
+
 .content {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+}
+
+.content h1 {
+    color: var(--white);
+    font-size: 23px;
 }
 
 .formContainer, .warehousesContainer {
