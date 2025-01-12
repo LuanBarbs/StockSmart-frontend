@@ -36,6 +36,11 @@
     color: var(--black)
 }
 
+.liClicked {
+    background-color: var(--orange);
+    color: var(--black)
+}
+
 .mainContent {
     flex-grow: 1;
     background-color: var(--lightGray);

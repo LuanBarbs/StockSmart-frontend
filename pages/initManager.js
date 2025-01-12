@@ -28,12 +28,24 @@ export default function initManager() {
             <aside className={styles.drawer}>
                 <h2>Menu</h2>
                 <ul>
-                    <li onClick={() => handleMenuClick("GCD")}>Gerenciar Cadastro de Depósitos</li>
-                    <li onClick={() => handleMenuClick("DRA")}>Definir Regras de Armazenagem</li>
-                    <li onClick={() => handleMenuClick("DPE")}>Definir Prioridades de Embarque</li>
-                    <li onClick={() => handleMenuClick("GRS")}>Gerar Relatório Simplificado</li>
-                    <li onClick={() => handleMenuClick("CH")}>Consultar Histórico</li>
-                    <li onClick={() => handleMenuClick("FO")}>Fechar Operações</li>
+                    <li 
+                        className={activeFeature === "GCD" ? styles.liClicked : ""}
+                        onClick={() => handleMenuClick("GCD")}>Gerenciar Cadastro de Depósitos</li>
+                    <li 
+                        className={activeFeature === "DRA" ? styles.liClicked : ""}
+                        onClick={() => handleMenuClick("DRA")}>Definir Regras de Armazenagem</li>
+                    <li 
+                        className={activeFeature === "DPE" ? styles.liClicked : ""}
+                        onClick={() => handleMenuClick("DPE")}>Definir Prioridades de Embarque</li>
+                    <li 
+                        className={activeFeature === "GRS" ? styles.liClicked : ""}
+                        onClick={() => handleMenuClick("GRS")}>Gerar Relatório Simplificado</li>
+                    <li 
+                        className={activeFeature === "CH" ? styles.liClicked : ""}
+                        onClick={() => handleMenuClick("CH")}>Consultar Histórico</li>
+                    <li 
+                        className={activeFeature === "FO" ? styles.liClicked : ""}
+                        onClick={() => handleMenuClick("FO")}>Fechar Operações</li>
                 </ul>
             </aside>
 

@@ -28,14 +28,30 @@ export default function initEmployee() {
             <aside className={styles.drawer}>
                 <h2>Menu</h2>
                 <ul>
-                    <li onClick={() => handleMenuClick("GCI")}>Gerenciar Cadastro de Itens</li>
-                    <li onClick={() => handleMenuClick("RM")}>Receber de Mercadorias</li>
-                    <li onClick={() => handleMenuClick("SCD")}>Simular Cross-Docking</li>
-                    <li onClick={() => handleMenuClick("MI")}>Movimentar Itens</li>
-                    <li onClick={() => handleMenuClick("SI")}>Separar Itens</li>
-                    <li onClick={() => handleMenuClick("RA")}>Registrar Avarias</li>
-                    <li onClick={() => handleMenuClick("GCM")}>Gerenciar Caminho de Mercadorias</li>
-                    <li onClick={() => handleMenuClick("CH")}>Consultar Histórico</li>
+                    <li 
+                        className={activeFeature === "GCI" ? styles.liClicked : ""}
+                        onClick={() => handleMenuClick("GCI")}>Gerenciar Cadastro de Itens</li>
+                    <li 
+                        className={activeFeature === "RM" ? styles.liClicked : ""}
+                        onClick={() => handleMenuClick("RM")}>Receber de Mercadorias</li>
+                    <li 
+                        className={activeFeature === "SCD" ? styles.liClicked : ""}
+                        onClick={() => handleMenuClick("SCD")}>Simular Cross-Docking</li>
+                    <li 
+                        className={activeFeature === "MI" ? styles.liClicked : ""}
+                        onClick={() => handleMenuClick("MI")}>Movimentar Itens</li>
+                    <li 
+                        className={activeFeature === "SI" ? styles.liClicked : ""}
+                        onClick={() => handleMenuClick("SI")}>Separar Itens</li>
+                    <li 
+                        className={activeFeature === "RA" ? styles.liClicked : ""}
+                        onClick={() => handleMenuClick("RA")}>Registrar Avarias</li>
+                    <li 
+                        className={activeFeature === "GCM" ? styles.liClicked : ""}
+                        onClick={() => handleMenuClick("GCM")}>Gerenciar Caminho de Mercadorias</li>
+                    <li 
+                        className={activeFeature === "CH" ? styles.liClicked : ""}
+                        onClick={() => handleMenuClick("CH")}>Consultar Histórico</li>
                 </ul>
             </aside>
 
