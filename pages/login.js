@@ -3,16 +3,16 @@ import styles from "../styles/Login.module.css";
 import { useRouter } from "next/router";
 
 export default function Login() {
-    const [id, setId] = useState("");
+    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const router = useRouter();
 
     const handleLogin = () => {
-        if(id === "0" && password === "admin") {
+        if(email === "admin@gmail.com" && password === "admin") {
             router.push("/initAdmin");
-        } else if(id === "1" && password === "gerente") {
+        } else if(email === "gerente@gmail.com" && password === "gerente") {
             router.push("/initManager");
-        } else if(id === "2" && password === "funcionario") {
+        } else if(email === "func@gmail.com" && password === "funcionario") {
             router.push("/initEmployee");
         } else {
             alert("ID ou senha incorretos!");
@@ -31,12 +31,12 @@ export default function Login() {
                     }}
                     className={styles.form}
                 >
-                    <label htmlFor="id">Seu id*</label>
+                    <label htmlFor="email">Seu email*</label>
                     <input 
-                        type="text"
-                        id="id"
-                        value={id}
-                        onChange={(e) => setId(e.target.value)}
+                        type="email"
+                        id="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                         className={styles.input}
                         required
                     />

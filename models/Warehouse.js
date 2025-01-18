@@ -1,48 +1,44 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+// Classe para o Armazém.
 class Warehouse {
-    constructor(id, name, address, width, depth, height, totalCapacity) {
+    constructor(id, name, location, capacity, currentCapacity, zones, status, createdAt) {
         this.id = id;
-        this.name = name;                   // Nome do depósito
-        this.address = address;             // Endereço.
-        this.width = width;                 // Largura total.
-        this.depth = depth;                 // Profundidade total.
-        this.height = height;               // Altura total.
-        this.totalCapacity = totalCapacity; // Capacidade total do depósito.
+        this.name = name;                           // Nome do depósito.
+        this.location = location;                   // Endereço.
+        this.capacity = capacity;                   // Capacidade total do depósito.
+        this.currentCapacity = currentCapacity;     // Capacidade atual disponível.
+        this.zones = zones;                         // Lista de zonas dentro do depósito (frio, seco).
+        this.status = status;                       // Ativo / Inativo.
+        this.createdAt = createdAt;                 // Data de criação do depósito.
+        this.items = [];                            // Lista de itens no depósito.
     };
 
-    // Método para salvar um depósito no AsyncStorage.
-    static async saveWarehouse(warehouse) {
-        try {
-            const existingWarehouses = await Warehouse.getWarehouses();
-            existingWarehouses.push(warehouse);
-            await AsyncStorage.setItem('warehouses', JSON.stringify(existingWarehouses));
-            return 'Depósito salvo com sucesso.';
-        } catch (error) {
-            throw new Error('Erro ao salvar o depósito.');
+    // Adiciona um item ao depósito.
+    addItem(item) {
+        if (this.currentCapacity + item.volume <= this.capacity) {
+            this.items.push(item);
+            this.currentCapacity += item.volume;
+            return true;
         }
+        return false;
     };
 
-    // Método estático para obter todos os depósitos
-    static async getWarehouses() {
-        try {
-            const storedWarehouses = await AsyncStorage.getItem('warehouses');
-            return storedWarehouses ? JSON.parse(storedWarehouses) : [];
-        } catch (error) {
-            throw new Error('Erro ao buscar os depósitos.');
+    // Remove um item do depósito.
+    removeItem(itemId) {
+        const index = this.items.findIndex(item => item.id === itemId);
+        if(index > -1) {
+            this.currentCapacity -= this.items[index].volume;
+            this.items.splice(index, 1);
+            return true;
         }
+        return false;
     };
 
-    // Método para verificar duplicidade de endereço.
-    static async isAddressDuplicate(address) {
-        const existingWarehouses = await Warehouse.getWarehouses();
-        return existingWarehouses.some((warehouse) => warehouse.address === address);
+    // Retorna a capacidade disponível do depósito.
+    getAvailableCapacity() {
+        return this.capacity - this.currentCapacity;
     };
-
-    // Método para verificar capacidade total.
-    static async verifyCapacity(width, depth, height, totalCapacity) {
-        return (totalCapacity > width*depth*height);
-    }
 };
 
 export default Warehouse;

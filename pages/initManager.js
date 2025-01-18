@@ -30,7 +30,7 @@ export default function initManager() {
                 <ul>
                     <li 
                         className={activeFeature === "GCD" ? styles.liClicked : ""}
-                        onClick={() => handleMenuClick("GCD")}>Gerenciar Cadastro de Depósitos</li>
+                        onClick={() => handleMenuClick("GCD")}>Gerenciar Cadastro de Armazém</li>
                     <li 
                         className={activeFeature === "DRA" ? styles.liClicked : ""}
                         onClick={() => handleMenuClick("DRA")}>Definir Regras de Armazenagem</li>

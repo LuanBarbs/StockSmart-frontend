@@ -13,11 +13,11 @@ export default function ManageWarehouses() {
     const [editWarehouse, setEditWarehouse] = useState(null);
 
     const [name, setName] = useState("");
-    const [address, setAddress] = useState("");
-    const [width, setWidth] = useState(0);
-    const [depth, setDepth] = useState(0);
-    const [height, setHeight] = useState(0);
-    const [totalCapacity, setTotalCapacity] = useState(0);
+    const [location, setLocation] = useState("");
+    const [capacity, setCapacity] = useState(0);
+
+    const [zones, setZones] = useState([]);
+    const [zoneName, setZoneName] = useState('');
 
     const [warehouses, setWarehouses] = useState([]);
 
@@ -25,7 +25,18 @@ export default function ManageWarehouses() {
     const handleToggleWarehouses = () => setShowWarehouses(!showWarehouses);
 
     const handleOpenWarehouseModal = (warehouse) => {
-        setSelectedWarehouse(warehouse);
+        const newSelectedWarehouse = new Warehouse(
+            warehouse.id,
+            warehouse.name,
+            warehouse.location,
+            warehouse.capacity,
+            warehouse.currentCapacity,
+            warehouse.zones,
+            warehouse.status,
+            warehouse.createdAt,
+        );
+
+        setSelectedWarehouse(newSelectedWarehouse);
         setShowModal(true);
     };
     const handleCloseModal = () => {
@@ -35,35 +46,35 @@ export default function ManageWarehouses() {
     const handleEditWarehouse = (warehouse) => {
         setEditWarehouse(warehouse);
         setEditModalOpen(true);
+        setZones(warehouse.zones);
     };
 
+    // Função para verificar duplicidade de endereço.
+    const isLocationDuplicate = (location) => {
+        return warehouses.some((warehouse) => warehouse.location === location);
+    };
 
     // Função para adicionar um armazém.
     const handleAddWarehouse = async () => {
-        if (width <= 0 || depth <= 0 || height <= 0 || totalCapacity <= 0) {
+        if (capacity <= 0) {
             alert("Erro: Todos os valores numéricos devem ser maiores que zero.");
             return;
         }
 
-        if(await Warehouse.isAddressDuplicate(address)) {
+        if(isLocationDuplicate(location)) {
             alert("Erro: Endereço já registrado no sistema!");
-            return;
-        }
-        
-        if(await Warehouse.verifyCapacity(width, depth, height, totalCapacity)) {
-            alert("Erro: Capacidade máxima impossível!");
             return;
         }
 
         const newWarehouse = new Warehouse(
-            warehouses.length + 1, name, address, width, depth, height, totalCapacity
+            warehouses.length + 1, name, location, capacity, 0, zones, "active", new Date(),
         );
 
 
         const updatedWarehouses = [...warehouses, newWarehouse];
         setWarehouses(updatedWarehouses);
-        await Warehouse.saveWarehouse(newWarehouse);
-        setName(""); setAddress(""); setWidth(0); setDepth(0); setHeight(0); setTotalCapacity(0);
+        await AsyncStorage.setItem('warehouses', JSON.stringify(updatedWarehouses));
+        setName(""); setLocation(""); setCapacity(0); setZones([]);
         alert("Cadastro realizado com sucesso!");
     };
 
@@ -76,26 +87,42 @@ export default function ManageWarehouses() {
     };
 
     const handleUpdateWarehouse = async () => {
-        if(editWarehouse.width <= 0 || editWarehouse.depth <= 0 || editWarehouse.height <= 0 || editWarehouse.totalCapacity <= 0) {
+        if(editWarehouse.capacity <= 0) {
             alert("Erro: Todos os valores numéricos devem ser maiores que zero.");
             return;
         }
 
-        if(selectedWarehouse.address !== editWarehouse.address) {
-            if(await Warehouse.isAddressDuplicate(editWarehouse.address)) {
+        if(selectedWarehouse.location !== editWarehouse.location) {
+            if(isLocationDuplicate(editWarehouse.address)) {
                 alert("Erro: Endereço já registrado no sistema!");
                 return;
             }
         }
 
-        const updatedWarehouses = warehouses.map(warehouse => 
+        editWarehouse.zones = zones;
+
+        const updatedWarehouses = warehouses.map(warehouse =>
             warehouse.id === editWarehouse.id ? editWarehouse : warehouse
         );
         setWarehouses(updatedWarehouses);
         await AsyncStorage.setItem('warehouses', JSON.stringify(updatedWarehouses));
+        setName(""); setLocation(""); setCapacity(0); setZones([]);
         setEditModalOpen(false);
         handleCloseModal();
         alert("Alteração realizada com sucesso!");
+    };
+
+    // Função para adicionar uma nova zona.
+    const handleAddZone = () => {
+        if(zoneName.trim()) {
+            setZones([...zones, zoneName]);
+            setZoneName('');
+        }
+    };
+
+    // Remove uma zona existente.
+    const handleRemoveZone = (index) => {
+        setZones(zones.filter((_, i) =>  i !== index));
     };
 
     // Carregar depósitos do AsyncStorage ao iniciar.
@@ -140,47 +167,57 @@ export default function ManageWarehouses() {
                                 onChange={(e) => setName(e.target.value)}
                                 required
                             />
-                            <label htmlFor="address">Endereço:</label>
+                            <label htmlFor="location">Endereço:</label>
                             <input 
                                 type="text" 
-                                id="address" 
-                                value={address}
-                                onChange={(e) => setAddress(e.target.value)}
+                                id="location" 
+                                value={location}
+                                onChange={(e) => setLocation(e.target.value)}
                                 required
                             />
-                            <label htmlFor="width">Largura (m):</label>
+                            <label htmlFor="capacity">Capacidade Total (m^3):</label>
                             <input 
                                 type="number" 
-                                id="width" 
-                                value={width}
-                                onChange={(e) => setWidth(e.target.value)}
+                                id="capacity" 
+                                value={capacity}
+                                onChange={(e) => setCapacity(e.target.value)}
                                 required
                             />
-                            <label htmlFor="depth">Profundidade (m):</label>
-                            <input 
-                                type="number" 
-                                id="depth" 
-                                value={depth}
-                                onChange={(e) => setDepth(e.target.value)}
-                                required
-                            />
-                            <label htmlFor="height">Altura (m):</label>
-                            <input 
-                                type="number"
-                                id="height"
-                                value={height}
-                                onChange={(e) => setHeight(e.target.value)}
-                                required
-                            />
-                            <label htmlFor="totalCapacity">Capacidade Total (m^3):</label>
-                            <input 
-                                type="number" 
-                                id="totalCapacity" 
-                                value={totalCapacity}
-                                onChange={(e) => setTotalCapacity(e.target.value)}
-                                required
-                            />
-                            <button type="submit">Cadastrar</button>
+                            
+                            {/* Gerenciamento de Zonas */}
+                            <label htmlFor="zones">Zonas:</label>
+                            <select
+                                id="role"
+                                value={zoneName}
+                                onChange={(e) => setZoneName(e.target.value)}
+                            >
+                                <option value="">Selecione um tipo de zona</option>
+                                <option value='Armazenagem Fria (Refrigerada)'>Armazenagem Fria (Refrigerada)</option>
+                                <option value='Armazenagem Seco (Ambiental)'>Armazenagem Seco (Ambiental)</option>
+                                <option value='Produtos Químicos'>Produtos Químicos</option>
+                                <option value='Itens Frágeis'>Itens Frágeis</option>
+                                <option value='Expedição'>Expedição</option>
+                                <option value='Recebimento'>Recebimento</option>
+                                <option value='Itens Pesados'>Itens Pesados</option>
+                                <option value='Produtos Perigosos'>Produtos Perigosos</option>
+                                <option value='Produtos de Alto Valor'>Produtos de Alto Valor</option>
+                                <option value='Retorno e Avarias'></option>
+                            </select>
+                            <button className={styles.addZoneButton} type="button" onClick={handleAddZone}>
+                                Adicionar Zona
+                            </button>
+                            <ul>
+                                {zones.map((zone, index) => (
+                                    <li key={index}>
+                                        {zone}{' '}
+                                        <button className={styles.removeZoneButton} type="button" onClick={() => handleRemoveZone(index)}>
+                                            Remover
+                                        </button>
+                                    </li>
+                                ))}
+                            </ul>
+
+                            <button className={styles.submitButton} type="submit">Cadastrar</button>
                         </form>
                     </section>
                 )}
@@ -218,11 +255,11 @@ export default function ManageWarehouses() {
                         <button className={styles.closeButton} onClick={handleCloseModal}>X</button>
                         <FaWarehouse size={100}/>
                         <h2>{selectedWarehouse?.name}</h2>
-                        <p>Endereço: {selectedWarehouse?.address}</p>
-                        <p>Largura (em metro): {selectedWarehouse?.width}</p>
-                        <p>Profundidade (em metro): {selectedWarehouse?.depth}</p>
-                        <p>Altura (em metro): {selectedWarehouse?.height}</p>
-                        <p>Capacidade Total (em m^3): {selectedWarehouse?.totalCapacity}</p>
+                        <p>Endereço: {selectedWarehouse?.location}</p>
+                        <p>Capacidade Total (em m^3): {selectedWarehouse?.capacity}</p>
+                        <p>Capacidade Disponível (em m^3): {selectedWarehouse?.getAvailableCapacity()}</p>
+                        <p>Quantidade de zonas: {selectedWarehouse?.zones.length}</p>
+                        <p>Status: {selectedWarehouse?.status === "active" ? "Ativo" : "Inativo"}</p>
                         <div className={styles.modalActions}>
                             <button onClick={() => handleEditWarehouse(selectedWarehouse)}><FaEdit /> Alterar</button>
                             <button onClick={handleDeleteWarehouse}><FaTrash /> Excluir</button>
@@ -250,36 +287,52 @@ export default function ManageWarehouses() {
                             <label>Endereço:</label>
                             <input 
                                 type="text"
-                                value={editWarehouse.address}
-                                onChange={(e) => setEditWarehouse({ ...editWarehouse, address: e.target.value })}
-                            />
-                            <label>Largura:</label>
-                            <input 
-                                type="number"
-                                value={editWarehouse.width}
-                                onChange={(e) => setEditWarehouse({ ...editWarehouse, width: e.target.value })}
-                            />
-                            <label>Profundidade:</label>
-                            <input 
-                                type="number"
-                                value={editWarehouse.depth}
-                                onChange={(e) => setEditWarehouse({ ...editWarehouse, depth: e.target.value })}
-                            />
-                            <label>Altura:</label>
-                            <input 
-                                type="number"
-                                value={editWarehouse.height}
-                                onChange={(e) => setEditWarehouse({ ...editWarehouse, height: e.target.value })}
+                                value={editWarehouse.location}
+                                onChange={(e) => setEditWarehouse({ ...editWarehouse, location: e.target.value })}
                             />
                             <label>Capacidade Total:</label>
                             <input 
                                 type="number"
-                                value={editWarehouse.totalCapacity}
-                                onChange={(e) => setEditWarehouse({ ...editWarehouse, totalCapacity: e.target.value })}
+                                value={editWarehouse.capacity}
+                                onChange={(e) => setEditWarehouse({ ...editWarehouse, capacity: e.target.value })}
                             />
+
+                            {/* Gerenciamento de Zonas */}
+                            <label htmlFor="zones">Zonas:</label>
+                            <select
+                                id="role"
+                                value={zoneName}
+                                onChange={(e) => setZoneName(e.target.value)}
+                            >
+                                <option value="">Selecione um tipo de zona</option>
+                                <option value='Armazenagem Fria (Refrigerada)'>Armazenagem Fria (Refrigerada)</option>
+                                <option value='Armazenagem Seco (Ambiental)'>Armazenagem Seco (Ambiental)</option>
+                                <option value='Produtos Químicos'>Produtos Químicos</option>
+                                <option value='Itens Frágeis'>Itens Frágeis</option>
+                                <option value='Expedição'>Expedição</option>
+                                <option value='Recebimento'>Recebimento</option>
+                                <option value='Itens Pesados'>Itens Pesados</option>
+                                <option value='Produtos Perigosos'>Produtos Perigosos</option>
+                                <option value='Produtos de Alto Valor'>Produtos de Alto Valor</option>
+                                <option value='Retorno e Avarias'></option>
+                            </select>
+                            <button className={styles.addZoneButton} type="button" onClick={handleAddZone}>
+                                Adicionar Zona
+                            </button>
+                            <ul>
+                                {zones.map((zone, index) => (
+                                    <li key={index}>
+                                        {zone}{' '}
+                                        <button className={styles.removeZoneButton} type="button" onClick={() => handleRemoveZone(index)}>
+                                            Remover
+                                        </button>
+                                    </li>
+                                ))}
+                            </ul>
+
                             <div className={styles.modalActions}>
-                                <button type="submit">Salvar</button>
-                                <button onClick={() => setEditModalOpen(false)}>Cancelar</button>
+                                <button className={styles.submitButton} type="submit">Salvar</button>
+                                <button className={styles.submitButton} onClick={() => setEditModalOpen(false)}>Cancelar</button>
                             </div>
                         </form>
                     </div>

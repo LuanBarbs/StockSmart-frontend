@@ -14,11 +14,8 @@ export default function initAdmin() {
     const [editUser, setEditUser] = useState(null);
 
     const [name, setName] = useState("");
-    const [cpf, setCpf] = useState("");
+    const [role, setRole] = useState("");
     const [email, setEmail] = useState("");
-    const [address, setAddress] = useState("");
-    const [phone, setPhone] = useState("");
-    const [position, setPosition] = useState("");
     const [password, setPassword] = useState("");
 
     const [users, setUsers] = useState([]);
@@ -42,18 +39,18 @@ export default function initAdmin() {
 
     const handleAddUser = async () => {
         const newUser = new User(
-            users.length + 1, name, cpf, address, phone, email, position, password
+            users.length + 1, name, role, email, password, new Date(), "active",
         );
 
-        if(isDuplicate(newUser.cpf, newUser.email)) {
-            alert("Erro: CPF ou email já registrados no sistema!");
+        if(isDuplicate(newUser.email)) {
+            alert("Erro: Email já registrados no sistema!");
             return;
         }
 
         const updatedUsers = [...users, newUser];
         setUsers(updatedUsers);
         await AsyncStorage.setItem('users', JSON.stringify(updatedUsers));
-        setName(""); setCpf(""); setEmail(""); setAddress(""); setPhone(""); setPosition(""); setPassword("");
+        setName(""); setRole(""); setEmail(""); setPassword("");
         alert("Cadastro realizado com sucesso!");
     };
 
@@ -66,7 +63,7 @@ export default function initAdmin() {
     };
 
     const handleUpdateUser = async () => {
-        if(isDuplicate(editUser.cpf, editUser.email, editUser.id)) {
+        if(isDuplicate(editUser.email, editUser.id)) {
             alert("Erro: CPF ou email já registrados no sistema!");
             return;
         }
@@ -81,9 +78,9 @@ export default function initAdmin() {
         alert("Alteração realizada com sucesso!");
     };
 
-    const isDuplicate = (cpf, email, userId = null) => {
+    const isDuplicate = (email, userId = null) => {
         return users.some(user =>
-            (user.cpf === cpf || user.email === email) && user.id != userId
+            (user.email === email) && user.id != userId
         );
     };
 
@@ -129,14 +126,17 @@ export default function initAdmin() {
                                 onChange={(e) => setName(e.target.value)}
                                 required
                             />
-                            <label htmlFor="cpf">CPF:</label>
-                            <input 
-                                type="text" 
-                                id="cpf" 
-                                value={cpf}
-                                onChange={(e) => setCpf(e.target.value)}
+                            <label>Cargo:</label>
+                            <select 
+                                id="role"
+                                value={role}
+                                onChange={(e) => setRole(e.target.value)} 
                                 required
-                            />
+                            >
+                                <option value="">Selecione um cargo</option>
+                                <option value="employee">Funcionário</option>
+                                <option value="manager">Gerente</option>
+                            </select>
                             <label htmlFor="email">Email:</label>    
                             <input 
                                 type="email" 
@@ -145,33 +145,6 @@ export default function initAdmin() {
                                 onChange={(e) => setEmail(e.target.value)}
                                 required
                             />
-                            <label>Endereço:</label>
-                            <input 
-                                type="text" 
-                                id="address" 
-                                value={address}
-                                onChange={(e) => setAddress(e.target.value)}    
-                                required
-                            />
-                            <label>Telefone:</label>
-                            <input 
-                                type="text"
-                                id="phone"
-                                value={phone}
-                                onChange={(e) => setPhone(e.target.value)} 
-                                required
-                            />
-                            <label>Cargo:</label>
-                            <select 
-                                id="position" 
-                                value={position}
-                                onChange={(e) => setPosition(e.target.value)} 
-                                required
-                            >
-                                <option value="">Selecione um cargo</option>
-                                <option value="employee">Funcionário</option>
-                                <option value="manager">Gerente</option>
-                            </select>
                             <label>Senha:</label>
                             <input 
                                 type="password" 
@@ -216,10 +189,8 @@ export default function initAdmin() {
                             <FaUserCircle size={100}/>
                             <h2>{selectedUser.name}</h2>
                             <p>Email: {selectedUser.email}</p>
-                            <p>CPF: {selectedUser.cpf}</p>
-                            <p>Endereço: {selectedUser.address}</p>
-                            <p>Telefone: {selectedUser.phone}</p>
                             <p>Cargo: {selectedUser.position === "employee" ? "Funcionário" : "Gerente"}</p>
+                            <p>Status: {selectedUser.status === "active" ? "Ativo" : "Inativo"}</p>
                             <div className={styles.modalActions}>
                                 <button onClick={() => handleEditUser(selectedUser)}><FaEdit /> Alterar</button>
                                 <button onClick={handleDeleteUser}><FaTrash /> Excluir</button>
@@ -244,37 +215,27 @@ export default function initAdmin() {
                                     value={editUser.name}
                                     onChange={(e) => setEditUser({ ...editUser, name: e.target.value })}
                                 />
-                                <label>CPF:</label>
-                                <input 
-                                    type="text" 
-                                    value={editUser.cpf}
-                                    onChange={(e) => setEditUser({ ...editUser, cpf: e.target.value })}
-                                />
+                                <label>Cargo:</label>
+                                <select
+                                    value={editUser.role}
+                                    onChange={(e) => setEditUser({ ...editUser, role: e.target.value })}
+                                >
+                                    <option value="employee">Funcionário</option>
+                                    <option value="manager">Gerente</option>
+                                </select>
                                 <label>Email:</label>
                                 <input 
                                     type="email" 
                                     value={editUser.email}
                                     onChange={(e) => setEditUser({ ...editUser, email: e.target.value })}
                                 />
-                                <label>Endereço:</label>
-                                <input 
-                                    type="text" 
-                                    value={editUser.address}
-                                    onChange={(e) => setEditUser({ ...editUser, address: e.target.value })}
-                                />
-                                <label>Telefone:</label>
-                                <input 
-                                    type="text" 
-                                    value={editUser.phone}
-                                    onChange={(e) => setEditUser({ ...editUser, phone: e.target.value })}
-                                />
-                                <label>Cargo:</label>
+                                <label>Status:</label>
                                 <select
-                                    value={editUser.position}
-                                    onChange={(e) => setEditUser({ ...editUser, position: e.target.value })}
+                                    value={editUser.status}
+                                    onChange={(e) => setEditUser({ ...editUser, status: e.target.value })}
                                 >
-                                    <option value="employee">Funcionário</option>
-                                    <option value="manager">Gerente</option>
+                                    <option value="active">Ativo</option>
+                                    <option value="inactive">Inativo</option>
                                 </select>
                                 <div className={styles.modalActions}>
                                     <button type="submit">Salvar</button>
