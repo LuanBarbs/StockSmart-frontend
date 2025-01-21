@@ -14,6 +14,10 @@ class Warehouse {
         this.items = [];                            // Lista de itens no depósito.
     };
 
+    getId() {
+        return this.id;
+    };
+
     // Adiciona um item ao depósito.
     addItem(item) {
         if (this.currentCapacity + item.volume <= this.capacity) {
