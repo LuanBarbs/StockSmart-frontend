@@ -1,5 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
 // Classe para o Armazém.
 class Warehouse {
     constructor(id, name, location, capacity, currentCapacity, zones, status, createdAt) {
@@ -12,10 +10,6 @@ class Warehouse {
         this.status = status;                       // Ativo / Inativo.
         this.createdAt = createdAt;                 // Data de criação do depósito.
         this.items = [];                            // Lista de itens no depósito.
-    };
-
-    getId() {
-        return this.id;
     };
 
     // Adiciona um item ao depósito.

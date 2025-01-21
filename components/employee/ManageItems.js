@@ -51,7 +51,7 @@ export default function ManageItems() {
         );
         const updatedItems = [...items, newItem];
         setItems(updatedItems);
-        await Item.saveItem(newItem);
+        await AsyncStorage.setItem('items', JSON.stringify(updatedItems));
         setName(""); setQuantity(0); setWarehouseId(null); setCategory(null); setVolume(null); setExpirationDate(null);
         alert("Item cadastrado com sucesso!");
     };
@@ -83,8 +83,12 @@ export default function ManageItems() {
     // Carregar itens do AsyncStorage ao iniciar.
     useEffect(() => {
         const loadData = async () => {
-            const storedItems = await Item.getAllItems();
-            setItems(storedItems);
+            try {
+                const storedItems = await AsyncStorage.getItem('itens');
+                setItems(storedItems ? JSON.parse(storedItems) : []);
+            } catch (error) {
+                console.error("Erro ao carregar dados do AsyncStorage: ", error);
+            }
         };
       
         loadData();
