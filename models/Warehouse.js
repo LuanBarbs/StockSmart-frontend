@@ -1,5 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
 // Classe para o Armazém.
 class Warehouse {
     constructor(id, name, location, capacity, currentCapacity, zones, status, createdAt) {

@@ -1,5 +1,3 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-
 // Classe para os itens.
 export default class Item {
     constructor(id, name, quantity, warehouseId, category, volume, expirationDate, createdAt, status) {
@@ -22,26 +20,5 @@ export default class Item {
     //  Verifica se o item está marcado como avariado.
     isDamaged() {
         return this.status === "damaged";
-    };
-
-    static async saveItem(item) {
-        try {
-            const storedItems = await AsyncStorage.getItem("items");
-            const items = storedItems ? JSON.parse(storedItems) : [];
-            items.push(item);
-            await AsyncStorage.setItem("items", JSON.stringify(items));
-        } catch (error) {
-            console.error("Erro ao salvar item no AsyncStorage: ", error);
-        }
-    };
-
-    static async getAllItems() {
-        try {
-            const storedItems = await AsyncStorage.getItem("items");
-            return storedItems ? JSON.parse(storedItems) : [];
-        } catch (error) {
-            console.log("Erro ao recuperar itens do AsyncStorage: ", error);
-            return [];
-        }
     };
 };

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FaEye, FaBars, FaPlusSquare, FaTrash, FaEdit, FaWarehouse } from "react-icons/fa";
+import { FaEye, FaBars, FaPlusSquare, FaTrash, FaEdit, FaBox } from "react-icons/fa";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import styles from "../../styles/InitManager.module.css";
 import Item from "../../models/Item";
@@ -13,11 +13,15 @@ export default function ManageItems() {
     const [editItem, setEditItem] = useState(null);
 
     const [name, setName] = useState("");
-    const [description, setDescription] = useState("");
     const [quantity, setQuantity] = useState(0);
-    const [location, setLocation] = useState("");
+    const [warehouseId, setWarehouseId] = useState(null);
+    const [category, setCategory] = useState(null);
+    const [volume, setVolume] = useState(0);
+    const [expirationDate, setExpirationDate] = useState(null);
 
     const [items, setItems] = useState([]);
+
+    const [warehouses, setWarehouses] = useState([]);
 
     const handleToggleForm = () => setShowForm(!showForm);
     const handleToggleItems = () => setShowItems(!showItems);
@@ -37,19 +41,18 @@ export default function ManageItems() {
 
     // Função para adicionar um item.
     const handleAddItem = async () => {
-        if (quantity <= 0 || !name || !description || !location) {
+        if (quantity <= 0 || !name || !warehouseId || !category || !volume || !expirationDate) {
             alert("Erro: Todos os campos devem ser preenchidos corretamente.");
             return;
         }
 
-        const newItem = new Item(items.length + 1, name, description, quantity, location);
+        const newItem = new Item(
+            items.length + 1, name, quantity, warehouseId, category, volume, expirationDate, new Date(), "active",
+        );
         const updatedItems = [...items, newItem];
         setItems(updatedItems);
-        await Item.saveItem(newItem);
-        setName("");
-        setDescription("");
-        setQuantity(0);
-        setLocation("");
+        await AsyncStorage.setItem('items', JSON.stringify(updatedItems));
+        setName(""); setQuantity(0); setWarehouseId(null); setCategory(null); setVolume(null); setExpirationDate(null);
         alert("Item cadastrado com sucesso!");
     };
 
@@ -62,7 +65,7 @@ export default function ManageItems() {
     };
 
     const handleUpdateItem = async () => {
-        if (editItem.quantity <= 0 || !editItem.name || !editItem.description || !editItem.location) {
+        if (editItem.quantity <= 0 || !editItem.name || !editItem.warehouseId || !editItem.category || !editItem.volume || !editItem.expirationDate) {
             alert("Erro: Todos os campos devem ser preenchidos corretamente.");
             return;
         }
@@ -77,12 +80,31 @@ export default function ManageItems() {
         alert("Alteração realizada com sucesso!");
     };
 
+    // Carregar itens do AsyncStorage ao iniciar.
     useEffect(() => {
         const loadData = async () => {
-            const storedItems = await Item.getAllItems();
-            setItems(storedItems);
+            try {
+                const storedItems = await AsyncStorage.getItem('itens');
+                setItems(storedItems ? JSON.parse(storedItems) : []);
+            } catch (error) {
+                console.error("Erro ao carregar dados do AsyncStorage: ", error);
+            }
         };
       
+        loadData();
+    }, []);
+
+    // Carregar depósitos do AsyncStorage ao iniciar.
+    useEffect(() => {
+        const loadData = async () => {
+            try {
+                const storedWarehouses = await AsyncStorage.getItem('warehouses');
+                setWarehouses(storedWarehouses ? JSON.parse(storedWarehouses) : []);
+            } catch (error) {
+                console.error("Erro ao carregar dados do AsyncStorage: ", error);
+            }
+        };
+
         loadData();
     }, []);
 
@@ -114,14 +136,6 @@ export default function ManageItems() {
                                 onChange={(e) => setName(e.target.value)}
                                 required
                             />
-                            <label htmlFor="description">Descrição:</label>
-                            <input
-                                type="text"
-                                id="description"
-                                value={description}
-                                onChange={(e) => setDescription(e.target.value)}
-                                required
-                            />
                             <label htmlFor="quantity">Quantidade:</label>
                             <input
                                 type="number"
@@ -130,15 +144,52 @@ export default function ManageItems() {
                                 onChange={(e) => setQuantity(e.target.value)}
                                 required
                             />
-                            <label htmlFor="location">Localização:</label>
+                            <label htmlFor="warehouseId">Id do armazém:</label>
+                            <select
+                                id="warehouseId"
+                                value={warehouseId}
+                                onChange={(e) => setWarehouseId(e.target.value)}
+                            >
+                                <option value="">Selecione um armazém</option>
+                                {warehouses.map((warehouse, index) => (
+                                    <option key={index} value={warehouse.id}>{warehouse.id} - {warehouse.name}</option>
+                                ))}
+                            </select>
+                            <label htmlFor="category">Categoria:</label>
+                            <select
+                                id="category"
+                                value={category}
+                                onChange={(e) => setCategory(e.target.value)}
+                            >
+                                <option value="">Selecione uma categoria</option>
+                                <option value="Perecíveis Refrigerados">Perecíveis Refrigerados</option>
+                                <option value="Produtos Secos e Não Perecíveis">Produtos Secos e Não Perecíveis</option>
+                                <option value="Químicos e Perigosos">Químicos e Perigosos</option>
+                                <option value="Frágeis e Delicados">Frágeis e Delicados</option>
+                                <option value="Itens Pesados e Industriais">Itens Pesados e Industriais</option>
+                                <option value="Produtos de Alto Valor">Produtos de Alto Valor</option>
+                                <option value="Avarias e Devoluções">Avarias e Devoluções</option>
+                                <option value="Em Processamento">Em Processamento</option>
+                                <option value="Itens em Expedição">Itens em Expedição</option>
+                                <option value="Itens Específicos por Condição">Itens Específicos por Condição</option>
+                            </select>
+                            <label htmlFor="volume">Volume (unitário):</label>
                             <input
-                                type="text"
-                                id="location"
-                                value={location}
-                                onChange={(e) => setLocation(e.target.value)}
+                                type="number"
+                                id="volume"
+                                value={volume}
+                                onChange={(e) => setVolume(e.target.value)}
                                 required
                             />
-                            <button type="submit">Cadastrar</button>
+                            <label htmlFor="expirationDate">Data de validade:</label>
+                            <input 
+                                type="date"
+                                id="expirationDate"
+                                value={expirationDate}
+                                onChange={(e) => setExpirationDate(e.target.value)}
+                                required
+                            />
+                            <button className={styles.submitButton} type="submit">Cadastrar</button>
                         </form>
                     </section>
                 )}
@@ -174,11 +225,14 @@ export default function ManageItems() {
                 <section className={styles.modal}>
                     <div className={styles.modalContent}>
                         <button className={styles.closeButton} onClick={handleCloseModal}>X</button>
-                        <FaWarehouse size={100}/>
+                        <FaBox size={100}/>
                         <h2>{selectedItem?.name}</h2>
-                        <p>Descrição: {selectedItem?.description}</p>
                         <p>Quantidade: {selectedItem?.quantity}</p>
-                        <p>Localização: {selectedItem?.location}</p>
+                        <p>Id do depósito: {selectedItem?.warehouseId}</p>
+                        <p>Categoria: {selectedItem?.category}</p>
+                        <p>Volume (unitário): {selectedItem?.volume}</p>
+                        <p>Data de validade: {selectedItem?.expirationDate}</p>
+                        <p>Status: {selectedItem?.status === "active" ? "Ativo" : "Inativo"}</p>
                         <div className={styles.modalActions}>
                             <button onClick={() => handleEditItem(selectedItem)}><FaEdit />Alterar</button>
                             <button onClick={() => handleDeleteItem()}><FaTrash />Excluir</button>
@@ -203,23 +257,50 @@ export default function ManageItems() {
                                 value={editItem.name}
                                 onChange={(e) => setEditItem({...editItem, name: e.target.value})}
                             />
-                            <label>Descrição:</label>
-                            <input 
-                                type="text"
-                                value={editItem.description}
-                                onChange={(e) => setEditItem({...editItem, description: e.target.value})}
-                            />
                             <label>Quantidade:</label>
                             <input 
                                 type="number"
                                 value={editItem.quantity}
                                 onChange={(e) => setEditItem({...editItem, quantity: e.target.value})}
                             />
-                            <label>Localização:</label>
+                            <label>Id do armazém:</label>
+                            <select
+                                value={editItem.warehouseId}
+                                onChange={(e) => setEditItem({...editItem, warehouseId: e.target.value})} 
+                            >
+                                <option>Selecione um armazém</option>
+                                {warehouses.map((warehouse, index) => (
+                                    <option key={index} value={warehouse.id}>{warehouse.id} - {warehouse.name}</option>
+                                ))}
+                            </select>
+                            <label>Categoria:</label>
+                            <select
+                                value={editItem.category}
+                                onChange={(e) => setEditItem({...editItem, category: e.target.value})}
+                            >
+                                <option value="">Selecione uma categoria</option>
+                                <option value="Perecíveis Refrigerados">Perecíveis Refrigerados</option>
+                                <option value="Produtos Secos e Não Perecíveis">Produtos Secos e Não Perecíveis</option>
+                                <option value="Químicos e Perigosos">Químicos e Perigosos</option>
+                                <option value="Frágeis e Delicados">Frágeis e Delicados</option>
+                                <option value="Itens Pesados e Industriais">Itens Pesados e Industriais</option>
+                                <option value="Produtos de Alto Valor">Produtos de Alto Valor</option>
+                                <option value="Avarias e Devoluções">Avarias e Devoluções</option>
+                                <option value="Em Processamento">Em Processamento</option>
+                                <option value="Itens em Expedição">Itens em Expedição</option>
+                                <option value="Itens Específicos por Condição">Itens Específicos por Condição</option>
+                            </select>
+                            <label>Volume (unitário):</label>
                             <input 
-                                type="text"
-                                value={editItem.location}
-                                onChange={(e) => setEditItem({...editItem, location: e.target.value})}
+                                type="number"
+                                value={editItem.volume}
+                                onChange={(e) => setEditItem({...editItem, volume: e.target.value})}
+                            />
+                            <label>Data de validade:</label>
+                            <input 
+                                type="date"
+                                value={editItem.expirationDate}
+                                onChange={(e) => setEditItem({...editItem, expirationDate: e.target.value})}
                             />
                             <div className={styles.modalActions}>
                                 <button type="submit">Salvar</button>
