@@ -21,7 +21,10 @@ export default function MoveItems() {
     const [showModal, setShowModal] = useState(false);
     
     const [warehouses, setWarehouses] = useState([]);
-    const [showWarehouses, setShowWarehouses] = useState(true);
+    const [showWarehousesOrigin, setShowWarehousesOrigin] = useState(true);
+    const [showWarehousesDestiny, setShowWarehousesDestiny] = useState(false);
+    const [selectedWarehouse, setSelectedWarehouse] = useState(null);
+    
     
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
@@ -30,10 +33,10 @@ export default function MoveItems() {
 
     const [items, setItems] = useState([]);
 
-    const handleToggleForm = () => setShowForm(!showForm);
     const handleToggleItems = () => setShowItems(!showItems);
 
-    const handleToggleWarehouses = () => setShowWarehouses(!showWarehouses);
+    const handleToggleWarehousesOrigin = () => setShowWarehousesOrigin(!showWarehousesOrigin);
+    const handleToggleWarehousesDestiny = () => setShowWarehousesDestiny(!showWarehousesDestiny);
 
     const handleOpenItemModal = (item) => {
         setSelectedItem(item);
@@ -48,54 +51,33 @@ export default function MoveItems() {
         setEditModalOpen(true);
     };
 
-    // Função para adicionar um item.
-    const handleAddItem = async () => {
-        if (quantity <= 0 || !name || !description || !location) {
-            alert("Erro: Todos os campos devem ser preenchidos corretamente.");
-            return;
-        }
-
-        const newItem = new Item(items.length + 1, name, description, quantity, location);
-        const updatedItems = [...items, newItem];
-        setItems(updatedItems);
-        await Item.saveItem(newItem);
-        setName("");
-        setDescription("");
-        setQuantity(0);
-        setLocation("");
-        alert("Item cadastrado com sucesso!");
-    };
-
-    const handleDeleteItem = async () => {
-        const updatedItems = items.filter((item) => item.id !== selectedItem.id);
-        setItems(updatedItems);
-        await AsyncStorage.setItem('items', JSON.stringify(updatedItems));
-        handleCloseModal();
-        alert("Exclusão Realizada com sucesso");
-    };
-
-    const handleUpdateItem = async () => {
-        if (editItem.quantity <= 0 || !editItem.name || !editItem.description || !editItem.location) {
-            alert("Erro: Todos os campos devem ser preenchidos corretamente.");
-            return;
-        }
-
-        const updatedItems = items.map(item =>
-            item.id === editItem.id ? editItem : item
+    const handleOpenWarehouseModal = (warehouse) => {
+        const newSelectedWarehouse = new Warehouse(
+            warehouse.id,
+            warehouse.name,
+            warehouse.location,
+            warehouse.capacity,
+            warehouse.currentCapacity,
+            warehouse.zones,
+            warehouse.status,
+            warehouse.createdAt,
         );
-        setItems(updatedItems);
-        await AsyncStorage.setItem('items', JSON.stringify(updatedItems));
-        setEditModalOpen(false);
-        handleCloseModal();
-        alert("Alteração realizada com sucesso!");
+
+        setSelectedWarehouse(newSelectedWarehouse);
+        setShowModal(true);
     };
 
+    // Carregar depósitos do AsyncStorage ao iniciar.
     useEffect(() => {
         const loadData = async () => {
-            const storedItems = await Item.getAllItems();
-            setItems(storedItems);
+            try {
+                const storedWarehouses = await AsyncStorage.getItem('warehouses');
+                setWarehouses(storedWarehouses ? JSON.parse(storedWarehouses) : []);
+            } catch (error) {
+                console.error("Erro ao carregar dados do AsyncStorage: ", error);
+            }
         };
-      
+
         loadData();
     }, []);
 
@@ -103,8 +85,8 @@ export default function MoveItems() {
         <main className={styles.wContainer}>
             
             <section className={styles.content}>
-                {showWarehouses && (
-                    <section className={`${showWarehouses ? styles.formContainer : styles.fullFormContainer}`}>
+                {showWarehousesOrigin && (
+                    <section className={`${showWarehousesOrigin ? styles.formContainer : styles.fullFormContainer}`}>
                         <h1>Armazém de origem</h1>
                         <hr color="#f1f1b1" size="5"/>
                         <ul>
@@ -128,8 +110,8 @@ export default function MoveItems() {
                     </section>
                 )}
 
-                {showWarehouses && (
-                    <section className={`${showWarehouses ? styles.formContainer : styles.fullFormContainer}`}>
+                {showWarehousesDestiny && (
+                    <section className={`${showWarehousesDestiny ? styles.formContainer : styles.fullFormContainer}`}>
                         <h1>Armazém de destino</h1>
                         <hr color="#f1f1b1" size="5"/>
                         <ul>
@@ -152,6 +134,24 @@ export default function MoveItems() {
                         </ul>
                     </section>
                 )}
+
+                {showModal && selectedWarehouse && (
+                <section className={styles.modal}>
+                    <div className={styles.modalContent}>
+                        <button className={styles.closeButton} onClick={handleCloseModal}>X</button>
+                        <FaWarehouse size={100}/>
+                        <h2>{selectedWarehouse?.name}</h2>
+                        <p>Endereço: {selectedWarehouse?.location}</p>
+                        <p>Capacidade Total (em m^3): {selectedWarehouse?.capacity}</p>
+                        <p>Capacidade Disponível (em m^3): {selectedWarehouse?.getAvailableCapacity()}</p>
+                        <p>Quantidade de zonas: {selectedWarehouse?.zones.length}</p>
+                        <p>Status: {selectedWarehouse?.status === "active" ? "Ativo" : "Inativo"}</p>
+                        <div className={styles.modalActions}>
+                            <button onClick={() => hadleShowItens(selectedWarehouse)}> Selecionar</button>
+                        </div>
+                    </div>
+                </section>
+            )}
 
                 {showItems && (
                     <section className={`${showForm ? styles.warehousesContainer : styles.fullWarehousesContainer}`}>
