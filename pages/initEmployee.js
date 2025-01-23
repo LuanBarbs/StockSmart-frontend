@@ -3,6 +3,7 @@ import styles from "../styles/initEmployee.module.css";
 
 // Importação de componentes.
 import ManageItems from "../components/employee/ManageItems";
+import ConsultHistory from "../components/ConsultHistory";
 
 export default function initEmployee() {
     const [activeFeature, setActiveFeature] = useState("default");
@@ -17,8 +18,10 @@ export default function initEmployee() {
                 return <ManageItems />;
             case "RM":
                 return <h2>Ainda não está pronto</h2>;
+            case "CH":
+                return <ConsultHistory />;
             default:
-                return <h1>Selecione uma funcionalidade no menu!</h1>;
+                return <h1 className={styles.initialTitle}>Selecione uma funcionalidade no menu!</h1>;
         }
     };
 

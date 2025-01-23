@@ -4,6 +4,7 @@ import styles from "../styles/InitManager.module.css";
 // Importação de componentes.
 import ManageWarehouses from "../components/manager/ManageWarehouses";
 import CloseOperations from "../components/manager/CloseOperations";
+import ConsultHistory from "../components/ConsultHistory";
 
 export default function initManager() {
     const [activeFeature, setActiveFeature] = useState("default");
@@ -18,6 +19,8 @@ export default function initManager() {
                 return <ManageWarehouses />;
             case "RM":
                 return <h2>Ainda não está pronto</h2>;
+            case "CH":
+                return <ConsultHistory />;
             case "COE":
                 return <CloseOperations />;
             default:

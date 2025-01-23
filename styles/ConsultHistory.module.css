@@ -1,0 +1,67 @@
+.container {
+  background-color: var(--white);
+  color: var(--black);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: var(--darkOrange);
+}
+
+.filters {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+
+.label {
+  font-size: 16px;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.input {
+  padding: 10px;
+  border: 1px solid var(--gray);
+  border-radius: 4px;
+  margin-bottom: 10px;
+  font-size: 16px;
+  background-color: var(--white);
+  color: var(--black);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--orange);
+  box-shadow: 0 0 5px var(--orange);
+}
+
+.history {
+  background-color: var(--lightGray);
+  padding: 20px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.table th,
+.table td {
+  border: 1px solid var(--gray);
+  padding: 12px;
+  text-align: left;
+}
+
+.table th {
+  background-color: var(--darkGray);
+  color: var(--white);
+}
