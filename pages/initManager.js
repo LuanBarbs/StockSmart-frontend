@@ -3,6 +3,7 @@ import styles from "../styles/InitManager.module.css";
 
 // Importação de componentes.
 import ManageWarehouses from "../components/manager/ManageWarehouses";
+import CloseOperations from "../components/manager/CloseOperations";
 
 export default function initManager() {
     const [activeFeature, setActiveFeature] = useState("default");
@@ -17,8 +18,10 @@ export default function initManager() {
                 return <ManageWarehouses />;
             case "RM":
                 return <h2>Ainda não está pronto</h2>;
+            case "COE":
+                return <CloseOperations />;
             default:
-                return <h1>Selecione uma funcionalidade no menu!</h1>;
+                return <div className={styles.initialTitle}><h1>Selecione uma funcionalidade no menu!</h1></div>;
         }
     };
 
@@ -44,8 +47,8 @@ export default function initManager() {
                         className={activeFeature === "CH" ? styles.liClicked : ""}
                         onClick={() => handleMenuClick("CH")}>Consultar Histórico</li>
                     <li 
-                        className={activeFeature === "FO" ? styles.liClicked : ""}
-                        onClick={() => handleMenuClick("FO")}>Fechar Operações</li>
+                        className={activeFeature === "COE" ? styles.liClicked : ""}
+                        onClick={() => handleMenuClick("COE")}>Consolidar Operações de Estoque</li>
                 </ul>
             </aside>
 
