@@ -23,9 +23,9 @@ npm install
 npm run dev
 
 ### Passo 5: Visualizar Funcionalidades
-#### 5.1: Para ver a funcionalidade de cadastro de usuários, basta acessar: stocksmart-frontend-git-main-luan-henriques-projects.vercel.app/initAdmin
-#### 5.2: Para ver as funcionalidades de funcionários, acesse: stocksmart-frontend-git-main-luan-henriques-projects.vercel.app/initEmployee
-#### 5.3: Para ver as funcionalidades de gerentes, acesse: stocksmart-frontend-git-main-luan-henriques-projects.vercel.app/initManager
+#### 5.1: Para ver a funcionalidade de cadastro de usuários, basta acessar: https://stocksmart-frontend-git-main-luan-henriques-projects.vercel.app/initAdmin
+#### 5.2: Para ver as funcionalidades de funcionários, acesse: https://stocksmart-frontend-git-main-luan-henriques-projects.vercel.app/initEmployee
+#### 5.3: Para ver as funcionalidades de gerentes, acesse: https://stocksmart-frontend-git-main-luan-henriques-projects.vercel.app/initManager
 #### Outro: Também é possível acessar cada uma dessas telas a partir da tela de login: stocksmart-frontend-git-main-luan-henriques-projects.vercel.app/login
 Informações do administrador: 
 email: admin@gmail.com
