@@ -189,8 +189,8 @@ export default function initAdmin() {
                             <FaUserCircle size={100}/>
                             <h2>{selectedUser.name}</h2>
                             <p>Email: {selectedUser.email}</p>
-                            <p>Cargo: {selectedUser.position === "employee" ? "Funcionário" : "Gerente"}</p>
-                            <p>Status: {selectedUser.status === "active" ? "Ativo" : "Inativo"}</p>
+                            <p>Cargo: {selectedUser.role == "employee" ? "Funcionário" : "Gerente"}</p>
+                            <p>Status: {selectedUser.status == "active" ? "Ativo" : "Inativo"}</p>
                             <div className={styles.modalActions}>
                                 <button onClick={() => handleEditUser(selectedUser)}><FaEdit /> Alterar</button>
                                 <button onClick={handleDeleteUser}><FaTrash /> Excluir</button>
