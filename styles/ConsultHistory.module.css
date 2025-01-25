@@ -65,3 +65,12 @@
   background-color: var(--darkGray);
   color: var(--white);
 }
+
+.tabButton {
+  padding: 10px 20px;
+  cursor: pointer;
+  background-color: var(--orange);
+  border: 1px solid var(--darkOrange);
+  font-size: 18px;
+  border-radius: 5px;
+}
