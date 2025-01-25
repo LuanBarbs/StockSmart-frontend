@@ -5,6 +5,8 @@ import styles from "../styles/InitManager.module.css";
 import ManageWarehouses from "../components/manager/ManageWarehouses";
 import CloseOperations from "../components/manager/CloseOperations";
 import ConsultHistory from "../components/ConsultHistory";
+import BoardingPriority from "../components/manager/BoardingPriority";
+import SimplifiedReport from "../components/manager/SimplifiedReport";
 
 export default function initManager() {
     const [activeFeature, setActiveFeature] = useState("default");
@@ -14,17 +16,25 @@ export default function initManager() {
     };
 
     const renderFeature = () => {
-        switch(activeFeature) {
-            case "GCD":
-                return <ManageWarehouses />;
-            case "RM":
-                return <h2>Ainda não está pronto</h2>;
-            case "CH":
-                return <ConsultHistory />;
-            case "COE":
-                return <CloseOperations />;
-            default:
-                return <div className={styles.initialTitle}><h1>Selecione uma funcionalidade no menu!</h1></div>;
+        switch (activeFeature) {
+          case "GCD":
+            return <ManageWarehouses />;
+          case "RM":
+            return <h2>Ainda não está pronto</h2>;
+          case "CH":
+            return <ConsultHistory />;
+          case "COE":
+            return <CloseOperations />;
+          case "GRS":
+            return <SimplifiedReport />;
+          case "DPE":
+            return <BoardingPriority />;
+          default:
+            return (
+              <div className={styles.initialTitle}>
+                <h1>Selecione uma funcionalidade no menu!</h1>
+              </div>
+            );
         }
     };
 
