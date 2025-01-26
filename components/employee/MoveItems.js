@@ -24,13 +24,7 @@ export default function MoveItems() {
     const [showWarehousesOrigin, setShowWarehousesOrigin] = useState(true);
     const [showWarehousesDestiny, setShowWarehousesDestiny] = useState(false);
     const [selectedWarehouse, setSelectedWarehouse] = useState(null);
-    
-    
-    const [name, setName] = useState("");
-    const [description, setDescription] = useState("");
-    const [quantity, setQuantity] = useState(0);
-    const [location, setLocation] = useState("");
-
+   
     const [items, setItems] = useState([]);
 
     const handleToggleItems = () => setShowItems(!showItems);
@@ -49,6 +43,12 @@ export default function MoveItems() {
     const handleEditItem = (item) => {
         setEditItem(item);
         setEditModalOpen(true);
+    };
+
+    const handleSelectItem = (warehouse) => {
+        setShowWarehousesOrigin(false);
+        setItems(warehouse.items);
+        setShowItems(true)
     };
 
     const handleOpenWarehouseModal = (warehouse) => {
@@ -100,6 +100,11 @@ export default function MoveItems() {
                                         >
                                             <FaEye />
                                         </button>
+                                        <button
+                                            className={styles.selectButton}
+                                            onClick={() => handleSelectItem(warehouse)}    >
+                                            Selecionar
+                                        </button>
                                     </li>
                                 ))
                             )}
@@ -145,16 +150,13 @@ export default function MoveItems() {
                         <p>Capacidade Total (em m^3): {selectedWarehouse?.capacity}</p>
                         <p>Capacidade Disponível (em m^3): {selectedWarehouse?.getAvailableCapacity()}</p>
                         <p>Quantidade de zonas: {selectedWarehouse?.zones.length}</p>
-                        <p>Status: {selectedWarehouse?.status === "active" ? "Ativo" : "Inativo"}</p>
-                        <div className={styles.modalActions}>
-                            <button onClick={() => hadleShowItens(selectedWarehouse)}> Selecionar</button>
-                        </div>
+                        <p>Status: {selectedWarehouse?.status === "active" ? "Ativo" : "Inativo"}</p>                        
                     </div>
                 </section>
-            )}
-
-                {showItems && (
-                    <section className={`${showForm ? styles.warehousesContainer : styles.fullWarehousesContainer}`}>
+            )}     
+                
+                {showItems && (         // não tá salvando os itens cadastrados
+                    <section className={`${showItems ? styles.warehousesContainer : styles.fullWarehousesContainer}`}>
                         <h1>Itens Cadastrados</h1>
                         <hr color="#f1f1b1" size="5"/>
                         <ul>
@@ -179,66 +181,26 @@ export default function MoveItems() {
                 )}
             </section>
 
-            {/* // Modal de Visualização do Item
+            {/* Modal de Visualização do Item */}
             {showModal && selectedItem && (
                 <section className={styles.modal}>
                     <div className={styles.modalContent}>
                         <button className={styles.closeButton} onClick={handleCloseModal}>X</button>
-                        <FaWarehouse size={100}/>
+                        <FaBox size={100}/>
                         <h2>{selectedItem?.name}</h2>
-                        <p>Descrição: {selectedItem?.description}</p>
                         <p>Quantidade: {selectedItem?.quantity}</p>
-                        <p>Localização: {selectedItem?.location}</p>
+                        <p>Id do depósito: {selectedItem?.warehouseId}</p>
+                        <p>Categoria: {selectedItem?.category}</p>
+                        <p>Volume (unitário): {selectedItem?.volume}</p>
+                        <p>Data de validade: {selectedItem?.expirationDate}</p>
+                        <p>Status: {selectedItem?.status === "active" ? "Ativo" : "Inativo"}</p>
                         <div className={styles.modalActions}>
                             <button onClick={() => handleEditItem(selectedItem)}><FaEdit />Alterar</button>
-                            <button onClick={() => handleDeleteItem()}><FaTrash />Excluir</button>
                         </div>
                     </div>
                 </section>
-            )} */}
+            )}
 
-            {/* {editModalOpen && (
-                <section className={styles.modal}>
-                    <div className={styles.modalContent}>
-                        <h2>Alterar Item</h2>
-                        <form
-                            onSubmit={(e) => {
-                                e.preventDefault();
-                                handleUpdateItem();
-                            }}
-                        >
-                            <label>Nome:</label>
-                            <input 
-                                type="text"
-                                value={editItem.name}
-                                onChange={(e) => setEditItem({...editItem, name: e.target.value})}
-                            />
-                            <label>Descrição:</label>
-                            <input 
-                                type="text"
-                                value={editItem.description}
-                                onChange={(e) => setEditItem({...editItem, description: e.target.value})}
-                            />
-                            <label>Quantidade:</label>
-                            <input 
-                                type="number"
-                                value={editItem.quantity}
-                                onChange={(e) => setEditItem({...editItem, quantity: e.target.value})}
-                            />
-                            <label>Localização:</label>
-                            <input 
-                                type="text"
-                                value={editItem.location}
-                                onChange={(e) => setEditItem({...editItem, location: e.target.value})}
-                            />
-                            <div className={styles.modalActions}>
-                                <button type="submit">Salvar</button>
-                                <button onClick={() => setEditModalOpen(false)}>Cancelar</button>
-                            </div>
-                        </form>
-                    </div>
-                </section>
-            )} */}
         </main>
     );
 };

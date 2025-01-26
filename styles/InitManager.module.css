@@ -348,3 +348,17 @@
         transform: translateY(0);
     }
 }
+
+.selectButton {
+    background-color: var(--orange);
+    color: var(--beige);
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.selectButton:hover {
+    background-color: #218838;
+}
