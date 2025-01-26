@@ -3,6 +3,7 @@ import styles from "../styles/initEmployee.module.css";
 
 // Importação de componentes.
 import ManageItems from "../components/employee/ManageItems";
+import RegisterBreakItems from "../components/employee/RegisterBreakItens";
 
 export default function initEmployee() {
     const [activeFeature, setActiveFeature] = useState("default");
@@ -17,6 +18,8 @@ export default function initEmployee() {
                 return <ManageItems />;
             case "RM":
                 return <h2>Ainda não está pronto</h2>;
+            case "RA":
+                return <RegisterBreakItems />;
             default:
                 return <h1>Selecione uma funcionalidade no menu!</h1>;
         }
