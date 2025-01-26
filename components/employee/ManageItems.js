@@ -84,7 +84,7 @@ export default function ManageItems() {
     useEffect(() => {
         const loadData = async () => {
             try {
-                const storedItems = await AsyncStorage.getItem('itens');
+                const storedItems = await AsyncStorage.getItem('items');
                 setItems(storedItems ? JSON.parse(storedItems) : []);
             } catch (error) {
                 console.error("Erro ao carregar dados do AsyncStorage: ", error);

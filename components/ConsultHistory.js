@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import styles from '../styles/ConsultHistory.module.css';
-import Item from '../models/Item';
 
 export default function ConsultHistory() {
     const [history, setHistory] = useState([]);
