@@ -116,9 +116,6 @@ export default function MoveItems() {
             <section className={styles.content}>
                 {showWarehousesOrigin && (
                     <section className={`${showWarehousesOrigin ? styles.formContainer : styles.fullFormContainer}`}>
-                        <button className={styles.backButton} onClick={() => backSelectWarehouse()}>
-                            ← Voltar
-                        </button>
                         <h1>Armazém de origem</h1>
                         <hr color="#f1f1b1" size="5"/>
                         <ul>
@@ -173,7 +170,7 @@ export default function MoveItems() {
                             {items.length != 0 && (
                                 items.map((item, index) => (
                                     <li key={index} className={styles.warehouseBox}>
-                                        <span>{item.id} - Nome: {item.name}</span>
+                                        <span>{item.id} - {item.name}</span>
                                         <button
                                             className={styles.eyeButton}
                                             onClick={() => handleOpenItemModal(item)}

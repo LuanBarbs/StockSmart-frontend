@@ -10,6 +10,7 @@ export default class Item {
         this.expirationDate = expirationDate;   // Data de validade (se tiver).
         this.createdAt = createdAt;             // Data de registro do item.
         this.status = status;                   // Status do item (disponível, reservado, danificado).
+        this.breakDescription;                  // Descrição da avaria
     };
 
     // Retorna se o item está disponível.
@@ -20,5 +21,5 @@ export default class Item {
     //  Verifica se o item está marcado como avariado.
     isDamaged() {
         return this.status === "damaged";
-    };
+    }; 
 };
