@@ -3,6 +3,9 @@ import styles from "../styles/initEmployee.module.css";
 
 // Importação de componentes.
 import ManageItems from "../components/employee/ManageItems";
+import MoveItems from "../components/employee/MoveItems";
+import ConsultHistory from "../components/ConsultHistory";
+import MerchandisePath from "../components/employee/MerchandisePath";
 import RegisterBreakItems from "../components/employee/RegisterBreakItens";
 
 export default function initEmployee() {
@@ -13,15 +16,25 @@ export default function initEmployee() {
     };
 
     const renderFeature = () => {
-        switch(activeFeature) {
-            case "GCI":
-                return <ManageItems />;
-            case "RM":
-                return <h2>Ainda não está pronto</h2>;
-            case "RA":
+        switch (activeFeature) {
+          case "GCI":
+            return <ManageItems />;
+          case "RM":
+            return <h2>Ainda não está pronto</h2>;
+            case "MI":
+                return <MoveItems />;
+          case "CH":
+            return <ConsultHistory />;
+          case "GCM":
+            return <MerchandisePath />;
+          case "RA":
                 return <RegisterBreakItems />;
-            default:
-                return <h1>Selecione uma funcionalidade no menu!</h1>;
+          default:
+            return (
+              <h1 className={styles.initialTitle}>
+                Selecione uma funcionalidade no menu!
+              </h1>
+            );
         }
     };
 

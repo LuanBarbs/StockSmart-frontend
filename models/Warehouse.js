@@ -1,7 +1,5 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
 // Classe para o Armazém.
-class Warehouse {
+export default class Warehouse {
     constructor(id, name, location, capacity, currentCapacity, zones, status, createdAt) {
         this.id = id;
         this.name = name;                           // Nome do depósito.
@@ -40,5 +38,3 @@ class Warehouse {
         return this.capacity - this.currentCapacity;
     };
 };
-
-export default Warehouse;
