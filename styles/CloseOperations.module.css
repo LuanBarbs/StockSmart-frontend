@@ -1,0 +1,102 @@
+.container {
+  background-color: var(--white);
+  color: var(--black);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: var(--darkOrange);
+}
+
+.label {
+  font-size: 18px;
+  margin-bottom: 10px;
+  display: block;
+  color: var(--orange);
+}
+
+.select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--gray);
+  border-radius: 4px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  background-color: var(--white);
+  font-size: 16px;
+  color: var(--black);
+  transition: border-color 0.3s;
+}
+
+.select:focus {
+  border-color: var(--orange);
+  outline: none;
+}
+
+.balance {
+  background-color: var(--lightGray);
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  padding: 12px;
+  border: 1px solid var(--gray);
+  text-align: left;
+}
+
+.table th {
+  background-color: var(--darkGray);
+  color: var(--white);
+}
+
+.button {
+  background-color: var(--orange);
+  color: var(--white);
+  padding: 15px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-size: 17px;
+  font-weight: bold;
+}
+
+.button:hover {
+  background-color: var(--darkOrange);
+}
+
+.status {
+  margin-top: 20px;
+  font-size: 14px;
+  color: var(--black2);
+}
+
+.input {
+  padding: 10px;
+  border: 1px solid var(--gray);
+  border-radius: 4px;
+  margin-bottom: 20px;
+  width: 97.5%;
+  font-size: 16px;
+  background-color: var(--white);
+  color: var(--black);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--orange);
+  box-shadow: 0 0 5px var(--orange);
+}

@@ -84,7 +84,7 @@ export default function ManageItems() {
     useEffect(() => {
         const loadData = async () => {
             try {
-                const storedItems = await AsyncStorage.getItem('itens');
+                const storedItems = await AsyncStorage.getItem('items');
                 setItems(storedItems ? JSON.parse(storedItems) : []);
             } catch (error) {
                 console.error("Erro ao carregar dados do AsyncStorage: ", error);
@@ -166,6 +166,8 @@ export default function ManageItems() {
                                 <option value="Produtos Secos e Não Perecíveis">Produtos Secos e Não Perecíveis</option>
                                 <option value="Químicos e Perigosos">Químicos e Perigosos</option>
                                 <option value="Frágeis e Delicados">Frágeis e Delicados</option>
+                                <option value="Móveis">Móveis</option>
+                                <option value="Eletrônicos">Eletrônicos</option>
                                 <option value="Itens Pesados e Industriais">Itens Pesados e Industriais</option>
                                 <option value="Produtos de Alto Valor">Produtos de Alto Valor</option>
                                 <option value="Avarias e Devoluções">Avarias e Devoluções</option>

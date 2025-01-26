@@ -1,7 +1,10 @@
 .container {
     display: flex;
-    height: 140vh;
     font-family: Arial, sans-serif;
+}
+
+.initialTitle {
+    height: 90vh;
 }
 
 .drawer {
