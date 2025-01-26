@@ -72,7 +72,7 @@ export default function MoveItems() {
         await AsyncStorage.setItem('items', JSON.stringify(updatedItems));
         setSelectDestinyModalOpen(false);
         handleCloseModal();
-        alert("Alteração realizada com sucesso!");
+        alert("Movimentação realizada com sucesso!");
     };
 
     const backSelectWarehouse = () => {
