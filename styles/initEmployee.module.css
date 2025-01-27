@@ -54,3 +54,10 @@
     color: var(--darkGray);
     font-size: 2em;
 }
+
+.headerSelectedItems {
+    display: flex;
+    justify-content: space-between;  /* Alinha o título à esquerda e o botão à direita */
+    align-items: center;  /* Alinha verticalmente */
+    margin-bottom: 15px;  /* Espaçamento abaixo */
+}
