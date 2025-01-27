@@ -4,6 +4,7 @@ import styles from "../styles/initEmployee.module.css";
 // Importação de componentes.
 import ManageItems from "../components/employee/ManageItems";
 import ConsultHistory from "../components/ConsultHistory";
+import RecebeMercadoria from "../components/employee/RecebeMercadoria";
 
 export default function initEmployee() {
     const [activeFeature, setActiveFeature] = useState("default");
@@ -17,7 +18,7 @@ export default function initEmployee() {
             case "GCI":
                 return <ManageItems />;
             case "RM":
-                return <h2>Ainda não está pronto</h2>;
+                return <RecebeMercadoria />;
             case "CH":
                 return <ConsultHistory />;
             default:
