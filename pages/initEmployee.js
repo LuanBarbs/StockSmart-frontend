@@ -5,6 +5,7 @@ import styles from "../styles/initEmployee.module.css";
 import ManageItems from "../components/employee/ManageItems";
 import ConsultHistory from "../components/ConsultHistory";
 import RecebeMercadoria from "../components/employee/RecebeMercadoria";
+import SimularCrossDocking from "../components/employee/SimularCrossDocking";
 
 export default function initEmployee() {
     const [activeFeature, setActiveFeature] = useState("default");
@@ -21,8 +22,10 @@ export default function initEmployee() {
                 return <RecebeMercadoria />;
             case "CH":
                 return <ConsultHistory />;
+            case "SCD":
+                return <SimularCrossDocking />;
             default:
-                return <h1 className={styles.initialTitle}>Selecione uma funcionalidade no menu!</h1>;
+                return <div className={styles.initialTitle}><h1>Selecione uma funcionalidade no menu!</h1></div>;
         }
     };
 
