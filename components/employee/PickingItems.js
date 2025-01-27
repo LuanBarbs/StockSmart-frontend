@@ -13,14 +13,12 @@ export default function PickingItems() {
     const [selectedItem, setSelectedItem] = useState(null);
     const [selectItemModalOpen, setShowselectItemModalOpen] = useState(false);
     const [editItem, setEditItem] = useState(null);
+
     const [selectDestinyModalOpen, setSelectDestinyModalOpen] = useState(false);
-    
-    
     const [warehouses, setWarehouses] = useState([]);
     const [showWarehousesOrigin, setShowWarehousesOrigin] = useState(true);
     const [selectedWarehouse, setSelectedWarehouse] = useState(null);
    
-    
     const [showPickingItems, setShowPickingItems] = useState(true);
 
     const [items, setItems] = useState([]);
@@ -60,8 +58,10 @@ export default function PickingItems() {
         setShowPickingItems(true)
     };
 
-    const handleSelectItem = (item) => {        
+    const handleSelectItem = (item) => {
+        setSelectedItem(item)
         setEditItem(item);
+        setSelectedItems((prevItems) => [...prevItems, item]); // Mantém os itens antigos e adiciona o novo 
         setSelectDestinyModalOpen(true);
     };
     const handleAddSelectedItems = (item) => {        
@@ -272,7 +272,7 @@ export default function PickingItems() {
                                 type="number"
                                 value={editItem.quantity}
                                 onChange={(e) => setEditItem({...editItem, quantity: e.target.value})}
-                            />                          
+                            />                        
                                              
                             <div className={styles.modalActions}>
                                 <button type="submit">Selecionar</button>
