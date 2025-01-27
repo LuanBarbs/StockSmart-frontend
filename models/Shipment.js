@@ -7,7 +7,6 @@ class Shipment {
         this.status = status;               // Status da remessa (Ex.: "Em Andamento").
         this.destination = destination;     // Local de destino.
         this.creationDate = creationDate;   // Data de criação.
-        this.items = [];                    // Lista de itens na remessa.
     };
 
     // Adicionar um item à remessa.
