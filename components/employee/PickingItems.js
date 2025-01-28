@@ -59,9 +59,11 @@ export default function PickingItems() {
     };
 
     const handleSelectItem = (item) => {
-        setSelectedItem(item)
+        // Evita itens duplicados
+        if (!selectedItems.some((selected) => selected.id === item.id)) {
+            setSelectedItems([...selectedItems, item]);
+        }
         setEditItem(item);
-        setSelectedItems((prevItems) => [...prevItems, item]); // Mantém os itens antigos e adiciona o novo 
         setSelectDestinyModalOpen(true);
     };
     const handleAddSelectedItems = (item) => {        
@@ -256,32 +258,7 @@ export default function PickingItems() {
                     </div>
                 </section>
             )}
-
-            {selectDestinyModalOpen && (
-                <section className={styles.modal}>
-                    <div className={styles.modalContent}>
-                        <h2>Movimentar item</h2>
-                        <form
-                            onSubmit={(e) => {
-                                e.preventDefault();
-                                handleAddSelectedItems();
-                            }}
-                        >
-                            <label>Quantidade:</label>
-                            <input 
-                                type="number"
-                                value={editItem.quantity}
-                                onChange={(e) => setEditItem({...editItem, quantity: e.target.value})}
-                            />                        
-                                             
-                            <div className={styles.modalActions}>
-                                <button type="submit">Selecionar</button>
-                                <button onClick={() => setSelectDestinyModalOpen(false)}>Cancelar</button>
-                            </div>
-                        </form>
-                    </div>
-                </section>
-            )}
+           
 
         </main>
     );
