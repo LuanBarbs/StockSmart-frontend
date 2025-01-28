@@ -8,6 +8,8 @@ import ConsultHistory from "../components/ConsultHistory";
 import MerchandisePath from "../components/employee/MerchandisePath";
 import RegisterBreakItems from "../components/employee/RegisterBreakItens";
 import PickingItems from "../components/employee/PickingItems";
+import RecebeMercadoria from "../components/employee/RecebeMercadoria";
+import SimularCrossDocking from "../components/employee/SimularCrossDocking";
 
 export default function initEmployee() {
     const [activeFeature, setActiveFeature] = useState("default");
@@ -21,23 +23,25 @@ export default function initEmployee() {
           case "GCI":
             return <ManageItems />;
           case "RM":
-            return <h2>Ainda não está pronto</h2>;
-            case "MI":
-                return <MoveItems />;
+            return <RecebeMercadoria />;
+          case "MI":
+            return <MoveItems />;
           case "CH":
             return <ConsultHistory />;
           case "GCM":
             return <MerchandisePath />;
           case "RA":
-                return <RegisterBreakItems />;
+            return <RegisterBreakItems />;
           case "SI":
-                return<PickingItems />;
+            return<PickingItems />;
+          case "SCD":
+            return <SimularCrossDocking />;
           default:
             return (
-              <h1 className={styles.initialTitle}>
-                Selecione uma funcionalidade no menu!
+              <div className={styles.initialTitle}>
+                <h1>Selecione uma funcionalidade no menu!
               </h1>
-            );
+            )</div>;
         }
     };
 
