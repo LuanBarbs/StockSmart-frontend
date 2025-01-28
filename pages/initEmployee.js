@@ -41,7 +41,7 @@ export default function initEmployee() {
               <div className={styles.initialTitle}>
                 <h1>Selecione uma funcionalidade no menu!
               </h1>
-            )</div>;
+            </div>);
         }
     };
 
