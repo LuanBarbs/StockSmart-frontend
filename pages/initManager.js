@@ -19,8 +19,8 @@ export default function initManager() {
         switch (activeFeature) {
           case "GCD":
             return <ManageWarehouses />;
-          case "RM":
-            return <h2>Ainda não está pronto</h2>;
+          case "DRA":
+            return <h1>Ainda não está pronto!</h1>;
           case "CH":
             return <ConsultHistory />;
           case "COE":
