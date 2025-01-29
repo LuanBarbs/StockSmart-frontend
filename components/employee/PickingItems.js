@@ -59,9 +59,11 @@ export default function PickingItems() {
     };
 
     const handleSelectItem = (item) => {
-        setSelectedItem(item)
+        // Evita itens duplicados
+        if (!selectedItems.some((selected) => selected.id === item.id)) {
+            setSelectedItems([...selectedItems, item]);
+        }
         setEditItem(item);
-        setSelectedItems((prevItems) => [...prevItems, item]); // Mantém os itens antigos e adiciona o novo 
         setSelectDestinyModalOpen(true);
     };
     const handleAddSelectedItems = (item) => {        
@@ -70,7 +72,9 @@ export default function PickingItems() {
     };
 
     const handleEndListSelectedItems = () =>{
-        
+        setSelectedItems([]); // Define a lista como vazia
+        setShowItems(false);
+        setShowWarehousesOrigin(true);
     }
 
     const handleUpdateItem = async () => {
@@ -128,6 +132,40 @@ export default function PickingItems() {
         <main className={styles.wContainer}>
             
             <section className={styles.content}>
+
+            {showPickingItems && (
+                    <section className={`${showPickingItems ? styles.formContainer : styles.fullFormContainer}`}>
+                            <h1>Itens Selecionados</h1>
+                            <button className={styles.selectButton} onClick={handleEndListSelectedItems}>
+                                Finalizar
+                            </button>
+                        <hr color="#f1f1b1" size="5"/>
+                        <ul>
+                            {selectedItems.length != 0 && (
+                                selectedItems.map((item, index) => (
+                                    <li key={index} className={styles.warehouseBox}>
+                                        <span>{item.id} - Nome: {item.name}</span>
+                                        <button
+                                            className={styles.eyeButton}
+                                            onClick={() => handleOpenItemModal(item)}
+                                        >
+                                            <FaEye />
+                                        </button>
+                                        <button
+                                            className={styles.selectButton}
+                                            onClick={() => handleSelectWarehouse(item)}    >
+                                            Selecionar
+                                        </button>
+                                    </li>
+                                ))
+                            )}
+                            {warehouses.length == 0 && (
+                                <p>Não há itens selecionados!</p>
+                            )}
+                        </ul>
+                    </section>
+                )}
+                
                 {showWarehousesOrigin && (
                     <section className={`${showWarehousesOrigin ? styles.formContainer : styles.fullFormContainer}`}>
                         <h1>Armazém de origem</h1>
@@ -157,39 +195,7 @@ export default function PickingItems() {
                         </ul>
                     </section>
                 )}
-                {showPickingItems && (
-                    <section className={`${showPickingItems ? styles.formContainer : styles.fullFormContainer}`}>
-                            <h1>Itens Selecionados</h1>
-                            <button className={styles.selectButton} onClick={handleEndListSelectedItems()}>
-                                Finalizar
-                            </button>
-                        <hr color="#f1f1b1" size="5"/>
-                        <ul>
-                            {selectedItems.length != 0 && (
-                                selectedItems.map((item, index) => (
-                                    <li key={index} className={styles.warehouseBox}>
-                                        <span>{item.id} - Nome: {item.name}</span>
-                                        <button
-                                            className={styles.eyeButton}
-                                            onClick={() => handleOpenItemModal(item)}
-                                        >
-                                            <FaEye />
-                                        </button>
-                                        <button
-                                            className={styles.selectButton}
-                                            onClick={() => handleSelectWarehouse(item)}    >
-                                            Selecionar
-                                        </button>
-                                    </li>
-                                ))
-                            )}
-                            {warehouses.length == 0 && (
-                                <p>Não há itens selecionados!</p>
-                            )}
-                        </ul>
-                    </section>
-                )}
-
+                
                 {showModal && selectedWarehouse && (
                     <section className={styles.modal}>
                         <div className={styles.modalContent}>
@@ -238,7 +244,7 @@ export default function PickingItems() {
                     </section>
                 )}
             </section>
-
+            
             {/* Modal de Visualização do Item */}
             {showModal && selectedItem && (
                 <section className={styles.modal}>
@@ -255,33 +261,7 @@ export default function PickingItems() {
                         
                     </div>
                 </section>
-            )}
-
-            {selectDestinyModalOpen && (
-                <section className={styles.modal}>
-                    <div className={styles.modalContent}>
-                        <h2>Movimentar item</h2>
-                        <form
-                            onSubmit={(e) => {
-                                e.preventDefault();
-                                handleAddSelectedItems();
-                            }}
-                        >
-                            <label>Quantidade:</label>
-                            <input 
-                                type="number"
-                                value={editItem.quantity}
-                                onChange={(e) => setEditItem({...editItem, quantity: e.target.value})}
-                            />                        
-                                             
-                            <div className={styles.modalActions}>
-                                <button type="submit">Selecionar</button>
-                                <button onClick={() => setSelectDestinyModalOpen(false)}>Cancelar</button>
-                            </div>
-                        </form>
-                    </div>
-                </section>
-            )}
+            )}          
 
         </main>
     );
