@@ -73,6 +73,8 @@ export default function PickingItems() {
 
     const handleEndListSelectedItems = () =>{
         setSelectedItems([]); // Define a lista como vazia
+        setShowItems(false);
+        setShowWarehousesOrigin(true);
     }
 
     const handleUpdateItem = async () => {
