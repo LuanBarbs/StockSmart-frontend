@@ -1,0 +1,82 @@
+.container {
+    background-color: var(--black);
+    color: var(--white);
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 800px;
+    margin: auto;
+}
+
+.title {
+    text-align: center;
+    color: var(--orange);
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.inputContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+    background: var(--darkGray);
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.input {
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    background-color: var(--gray);
+    color: var(--white);
+    font-size: 16px;
+}
+
+.button {
+    padding: 10px;
+    background-color: var(--orange);
+    color: var(--white);
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+    transition: 0.3s;
+}
+
+.button:hover {
+    background-color: var(--darkOrange);
+}
+
+.list {
+    list-style: none;
+    padding: 0;
+}
+
+.listItem {
+    background-color: var(--darkGray);
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 5px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.shipmentInfo {
+    margin-bottom: 10px;
+}
+
+.shipButton {
+    background-color: var(--darkOrange);
+    color: var(--white);
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 5px;
+    transition: 0.3s;
+}
+
+.shipButton:hover {
+    background-color: var(--red);
+}

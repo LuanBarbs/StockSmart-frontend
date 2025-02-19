@@ -9,7 +9,7 @@ import MerchandisePath from "../components/employee/MerchandisePath";
 import RegisterBreakItems from "../components/employee/RegisterBreakItens";
 import PickingItems from "../components/employee/PickingItems";
 import RecebeMercadoria from "../components/employee/RecebeMercadoria";
-import SimularCrossDocking from "../components/employee/SimularCrossDocking";
+import SimulateCrossDocking from "../components/employee/SimulateCrossDocking";
 
 export default function initEmployee() {
     const [activeFeature, setActiveFeature] = useState("default");
@@ -33,9 +33,9 @@ export default function initEmployee() {
           case "RA":
             return <RegisterBreakItems />;
           case "SI":
-            return<PickingItems />;
+            return <PickingItems />;
           case "SCD":
-            return <SimularCrossDocking />;
+            return <SimulateCrossDocking />;
           default:
             return (
               <div className={styles.initialTitle}>

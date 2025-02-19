@@ -38,16 +38,16 @@ export default function Home() {
         </section>
         <section className={styles.cards}>
           <div className={styles.card}>
-            <h2>Controle de Estoque</h2>
-            <p>Gerencie seu inventário com total rastreabilidade e eficiência.</p>
+            <h2>Relatórios Personalizados</h2>
+            <p>Gere relatórios detalhados para tomada de decisões estratégicas.</p>
           </div>
           <div className={styles.card}>
-            <h2>Otimização de Espaço</h2>
-            <p>Defina as melhores posições para armazenagem de produtos.</p>
+            <h2>Integração Fácil</h2>
+            <p>Conecte seu WMS com outros sistemas e plataformas de forma rápida e simples.</p>
           </div>
           <div className={styles.card}>
-            <h2>Facilidade de Uso</h2>
-            <p>Uma interface intuitiva para maximizar a produtividade.</p>
+            <h2>Gestão de Pedidos</h2>
+            <p>Acompanhe e gerencie pedidos com eficiência, garantindo entregas rápidas e precisas.</p>
           </div>
         </section>
       </main>
