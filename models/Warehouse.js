@@ -1,14 +1,14 @@
 // Classe para o Armazém.
 export default class Warehouse {
-    constructor(id, name, location, capacity, currentCapacity, zones, status, createdAt) {
+    constructor(id, name, location, capacity, zones) {
         this.id = id;
         this.name = name;                           // Nome do depósito.
         this.location = location;                   // Endereço.
         this.capacity = capacity;                   // Capacidade total do depósito.
-        this.currentCapacity = currentCapacity;     // Capacidade atual disponível.
+        this.currentCapacity = capacity;            // Capacidade atual disponível.
         this.zones = zones;                         // Lista de zonas dentro do depósito (frio, seco).
-        this.status = status;                       // Ativo / Inativo.
-        this.createdAt = createdAt;                 // Data de criação do depósito.
+        this.status = "active";                     // Ativo / Inativo.
+        this.createdAt = new Date();                // Data de criação do depósito.
         this.items = [];                            // Lista de itens no depósito.
     };
 
