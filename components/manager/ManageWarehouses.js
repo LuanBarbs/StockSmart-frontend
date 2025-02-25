@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { FaEye, FaBars, FaPlusSquare, FaTrash, FaEdit, FaWarehouse } from "react-icons/fa";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import styles from "../../styles/InitManager.module.css";
+
+import { insertWarehouse } from "../../controller/WarehouseController";
 import Warehouse from "../../models/Warehouse";
 
 export default function ManageWarehouses() {
@@ -67,13 +69,13 @@ export default function ManageWarehouses() {
         }
 
         const newWarehouse = new Warehouse(
-            warehouses.length + 1, name, location, capacity, 0, zones, "active", new Date(),
+            warehouses.length + 1, name, location, capacity, zones,
         );
 
 
         const updatedWarehouses = [...warehouses, newWarehouse];
         setWarehouses(updatedWarehouses);
-        await AsyncStorage.setItem('warehouses', JSON.stringify(updatedWarehouses));
+        insertWarehouse(newWarehouse);
         setName(""); setLocation(""); setCapacity(0); setZones([]);
         alert("Cadastro realizado com sucesso!");
     };
@@ -129,7 +131,7 @@ export default function ManageWarehouses() {
     useEffect(() => {
         const loadData = async () => {
             try {
-                const storedWarehouses = await AsyncStorage.getItem('warehouses');
+                const storedWarehouses = await AsyncStorage.getItem('WAREHOUSES');
                 setWarehouses(storedWarehouses ? JSON.parse(storedWarehouses) : []);
             } catch (error) {
                 console.error("Erro ao carregar dados do AsyncStorage: ", error);

@@ -1,3 +1,5 @@
+import { insertWarehouse } from "../api/warehouseApi";
+
 // Classe para o Armazém.
 export default class Warehouse {
     constructor(id, name, location, capacity, zones) {
@@ -10,6 +12,11 @@ export default class Warehouse {
         this.status = "active";                     // Ativo / Inativo.
         this.createdAt = new Date();                // Data de criação do depósito.
         this.items = [];                            // Lista de itens no depósito.
+    };
+
+    // Conecta com o Async Storage.
+    static createWarehouse(warehouse) {
+        insertWarehouse(warehouse);
     };
 
     // Adiciona um item ao depósito.
