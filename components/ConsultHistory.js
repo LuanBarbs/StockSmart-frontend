@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import styles from '../styles/ConsultHistory.module.css';
 
+import HistoryController from '../controller/HistoryController';
+
 export default function ConsultHistory() {
     const [history, setHistory] = useState([]);
     const [startDate, setStartDate] = useState('');
@@ -10,9 +12,8 @@ export default function ConsultHistory() {
 
     useEffect(() => {
         const fetchHistory = async () => {
-            const response = await fetch('/api/getHistory');
-            const data = await response.json();
-            setHistory(data.history);
+            const response = await HistoryController.listHistory();
+            setHistory(response);
         };
 
         fetchHistory();
@@ -20,7 +21,7 @@ export default function ConsultHistory() {
 
     useEffect(() => {
         const filtered = history.filter(item => {
-            const itemDate = new Date(item.date);
+            const itemDate = new Date(item.dateTime);
             const start = startDate ? new Date(startDate) : new Date('1900-01-01');
             const end = endDate ? new Date(endDate) : new Date();
             const isDateInRange = itemDate >= start && itemDate <= end;
@@ -66,7 +67,7 @@ export default function ConsultHistory() {
             </div>
 
             <div className={styles.history}>
-                <h2>Movimentações</h2>
+                <h2>Histórico</h2>
                 <table className={styles.table}>
                     <thead>
                         <tr>
@@ -82,9 +83,9 @@ export default function ConsultHistory() {
                             <tr key={item.id}>
                                 <td>{item.id}</td>
                                 <td>{item.action}</td>
-                                <td>{new Date(item.date).toLocaleDateString()}</td>
+                                <td>{new Date(item.dateTime).toLocaleDateString()}</td>
                                 <td>{item.location}</td>
-                                <td>{item.user}</td>
+                                <td>{item.userName}</td>
                             </tr>
                         ))}
                     </tbody>

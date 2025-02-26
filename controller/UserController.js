@@ -62,7 +62,7 @@ class UserController {
             if (!user) return { status: 404, error: "Usuário não encontrado" };
 
             await deleteUser(id);
-            return { status: 200, error: "Usuário excluído com sucesso!" };
+            return { status: 200, message: "Usuário excluído com sucesso!" };
         } catch (error) {
             return { status: 500, error: "Erro ao excluir usuário" };
         }

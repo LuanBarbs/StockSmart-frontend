@@ -22,7 +22,6 @@ export const insertData = async (key, newData) => {
 };
 
 export const updateData = async (key, updatedData) => {
-
     try {
         let data = await getData(key);
         data = data.map(dt => (dt.id === updatedData.id ? updatedData : dt));
