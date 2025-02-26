@@ -110,8 +110,6 @@ export default function ManageWarehouses() {
             loadWarehouses();
             alert("Exclusão realizada com sucesso!");
 
-            console.log(response);
-
             HistoryController.createHistory({
                 action: `Remoção do Armazém: "${response.name}"`,
                 userName: users[0].name || null,
