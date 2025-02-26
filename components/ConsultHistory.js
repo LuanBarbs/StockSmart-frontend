@@ -21,7 +21,7 @@ export default function ConsultHistory() {
 
     useEffect(() => {
         const filtered = history.filter(item => {
-            const itemDate = new Date(item.date);
+            const itemDate = new Date(item.dateTime);
             const start = startDate ? new Date(startDate) : new Date('1900-01-01');
             const end = endDate ? new Date(endDate) : new Date();
             const isDateInRange = itemDate >= start && itemDate <= end;
@@ -29,7 +29,7 @@ export default function ConsultHistory() {
             return isDateInRange && isLocationMatch;
         });
 
-        setFilteredHistory(history);
+        setFilteredHistory(filtered);
     }, [startDate, endDate, location, history]);
 
     return (
@@ -83,7 +83,7 @@ export default function ConsultHistory() {
                             <tr key={item.id}>
                                 <td>{item.id}</td>
                                 <td>{item.action}</td>
-                                <td>{item.date}</td>
+                                <td>{new Date(item.dateTime).toLocaleDateString()}</td>
                                 <td>{item.location}</td>
                                 <td>{item.userName}</td>
                             </tr>

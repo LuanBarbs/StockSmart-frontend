@@ -91,8 +91,8 @@ export default function ManageWarehouses() {
             alert("Armazém criado com sucesso!");
             
             HistoryController.createHistory({
-                action: "Criação de Armazém",
-                userName: users[1] || null,
+                action: `Criação do Armazém: "${newWarehouse.name}"`,
+                userName: users[0].name || null,
                 userRole: "Gerente",
                 location: newWarehouse.location,
                 description: `Criação do Armazém "${newWarehouse.name}" com capacidade de ${newWarehouse.capacity} m^3`,
@@ -109,6 +109,16 @@ export default function ManageWarehouses() {
         } else {
             loadWarehouses();
             alert("Exclusão realizada com sucesso!");
+
+            console.log(response);
+
+            HistoryController.createHistory({
+                action: `Remoção do Armazém: "${response.name}"`,
+                userName: users[0].name || null,
+                userRole: "Gerente",
+                location: response.location,
+                description: "",
+            });
         }
     };
 

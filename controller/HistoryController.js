@@ -15,7 +15,7 @@ class HistoryController {
         const { action, userName, userRole, location, description } = req;
         
         try {
-            const history = getHistory();
+            const history = await getHistory();
 
             const newHistory = new History(
                 history.length + 1,

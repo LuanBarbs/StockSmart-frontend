@@ -58,7 +58,7 @@ class WarehouseController {
             if (!warehouse) return { status: 404, error: "Armazém não encontrado" };
 
             await deleteWarehouse(id);
-            return { status: 200, message: "Armazém excluído com sucesso!" };
+            return warehouse;
         } catch (error) {
             return { status: 500, error: "Erro ao excluir armazém" };
         }
