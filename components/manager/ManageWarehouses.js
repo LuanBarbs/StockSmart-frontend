@@ -3,8 +3,10 @@ import { FaEye, FaBars, FaPlusSquare, FaTrash, FaEdit, FaWarehouse } from "react
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import styles from "../../styles/InitManager.module.css";
 
-import { insertWarehouse } from "../../controller/WarehouseController";
 import Warehouse from "../../models/Warehouse";
+import WarehouseController from "../../controller/WarehouseController";
+import HistoryController from "../../controller/HistoryController";
+import UserController from "../../controller/UserController";
 
 export default function ManageWarehouses() {
     const [showForm, setShowForm] = useState(true);
@@ -17,43 +19,52 @@ export default function ManageWarehouses() {
     const [name, setName] = useState("");
     const [location, setLocation] = useState("");
     const [capacity, setCapacity] = useState(0);
-
     const [zones, setZones] = useState([]);
     const [zoneName, setZoneName] = useState('');
 
     const [warehouses, setWarehouses] = useState([]);
 
+    const [users, setUsers] = useState([]);
+
+    // Carregar depósitos ao iniciar.
+    const loadWarehouses = async () => {
+        const storedWarehouses = await WarehouseController.listWarehouses();
+        setWarehouses(storedWarehouses);
+    };
+    useEffect(() => {
+        loadWarehouses();
+    }, []);
+
+    // Carregar usuários ao iniciar.
+    useEffect(() => {
+        const fetchUsers = async () => {
+            const response = await UserController.listUsers();
+            setUsers(response);
+        };
+
+        fetchUsers();
+    }, []);
+
     const handleToggleForm = () => setShowForm(!showForm);
     const handleToggleWarehouses = () => setShowWarehouses(!showWarehouses);
 
     const handleOpenWarehouseModal = (warehouse) => {
-        const newSelectedWarehouse = new Warehouse(
+        setSelectedWarehouse(new Warehouse(
             warehouse.id,
             warehouse.name,
             warehouse.location,
             warehouse.capacity,
-            warehouse.currentCapacity,
-            warehouse.zones,
-            warehouse.status,
-            warehouse.createdAt,
-        );
-
-        setSelectedWarehouse(newSelectedWarehouse);
+            warehouse.zones
+        ));
         setShowModal(true);
     };
-    const handleCloseModal = () => {
-        setShowModal(false);
-    };
+
+    const handleCloseModal = () => {setShowModal(false); setZones([]);};
 
     const handleEditWarehouse = (warehouse) => {
         setEditWarehouse(warehouse);
         setEditModalOpen(true);
         setZones(warehouse.zones);
-    };
-
-    // Função para verificar duplicidade de endereço.
-    const isLocationDuplicate = (location) => {
-        return warehouses.some((warehouse) => warehouse.location === location);
     };
 
     // Função para adicionar um armazém.
@@ -63,29 +74,42 @@ export default function ManageWarehouses() {
             return;
         }
 
-        if(isLocationDuplicate(location)) {
+        if (warehouses.some((w) => w.location === location)) {
             alert("Erro: Endereço já registrado no sistema!");
             return;
         }
 
-        const newWarehouse = new Warehouse(
-            warehouses.length + 1, name, location, capacity, zones,
-        );
+        const newWarehouse = new Warehouse(null, name, location, capacity, zones);
+        const response = await WarehouseController.createWarehouse(newWarehouse);
 
-
-        const updatedWarehouses = [...warehouses, newWarehouse];
-        setWarehouses(updatedWarehouses);
-        insertWarehouse(newWarehouse);
-        setName(""); setLocation(""); setCapacity(0); setZones([]);
-        alert("Cadastro realizado com sucesso!");
+        if(response.error) {
+            alert(response.error);
+        } else {
+            loadWarehouses();
+    
+            setName(""); setLocation(""); setCapacity(0); setZones([]);
+            alert("Armazém criado com sucesso!");
+            
+            HistoryController.createHistory({
+                action: "Criação de Armazém",
+                userName: users[1] || null,
+                userRole: "Gerente",
+                location: newWarehouse.location,
+                description: `Criação do Armazém "${newWarehouse.name}" com capacidade de ${newWarehouse.capacity} m^3`,
+            });
+        }
     };
 
     const handleDeleteWarehouse = async () => {
-        const updatedWarehouses = warehouses.filter((warehouse) => warehouse.id !== selectedWarehouse.id);
-        setWarehouses(updatedWarehouses);
-        await AsyncStorage.setItem('warehouses', JSON.stringify(updatedWarehouses));
+        const response = await WarehouseController.deleteWarehouse(selectedWarehouse.id);
+
         handleCloseModal();
-        alert("Exclusão Realizada com sucesso");
+        if (response.error) {
+            alert(response.error);
+        } else {
+            loadWarehouses();
+            alert("Exclusão realizada com sucesso!");
+        }
     };
 
     const handleUpdateWarehouse = async () => {
@@ -94,24 +118,24 @@ export default function ManageWarehouses() {
             return;
         }
 
-        if(selectedWarehouse.location !== editWarehouse.location) {
-            if(isLocationDuplicate(editWarehouse.address)) {
-                alert("Erro: Endereço já registrado no sistema!");
-                return;
-            }
+        if (selectedWarehouse.location !== editWarehouse.location && 
+            warehouses.some((w) => w.location === editWarehouse.location)) {
+            alert("Erro: Endereço já registrado no sistema!");
+            return;
         }
 
         editWarehouse.zones = zones;
 
-        const updatedWarehouses = warehouses.map(warehouse =>
-            warehouse.id === editWarehouse.id ? editWarehouse : warehouse
-        );
-        setWarehouses(updatedWarehouses);
-        await AsyncStorage.setItem('warehouses', JSON.stringify(updatedWarehouses));
-        setName(""); setLocation(""); setCapacity(0); setZones([]);
+        const response = await WarehouseController.updateWarehouse(editWarehouse);
+        
         setEditModalOpen(false);
         handleCloseModal();
-        alert("Alteração realizada com sucesso!");
+        if (response.error) {
+            alert(response.error);
+        } else {
+            loadWarehouses();
+            alert("Alteração realizada com sucesso!");
+        }
     };
 
     // Função para adicionar uma nova zona.
@@ -126,20 +150,6 @@ export default function ManageWarehouses() {
     const handleRemoveZone = (index) => {
         setZones(zones.filter((_, i) =>  i !== index));
     };
-
-    // Carregar depósitos do AsyncStorage ao iniciar.
-    useEffect(() => {
-        const loadData = async () => {
-            try {
-                const storedWarehouses = await AsyncStorage.getItem('WAREHOUSES');
-                setWarehouses(storedWarehouses ? JSON.parse(storedWarehouses) : []);
-            } catch (error) {
-                console.error("Erro ao carregar dados do AsyncStorage: ", error);
-            }
-        };
-
-        loadData();
-    }, []);
 
     return (
         <main className={styles.wContainer}>

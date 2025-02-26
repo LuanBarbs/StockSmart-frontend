@@ -42,7 +42,6 @@ export default function initAdmin() {
 
     const fetchUsers = async () => {
         const response = await UserController.listUsers();
-        console.log(response);
         setUsers(response);
     };
 
