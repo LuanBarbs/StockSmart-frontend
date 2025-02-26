@@ -22,9 +22,10 @@ export const insertData = async (key, newData) => {
 };
 
 export const updateData = async (key, updatedData) => {
+
     try {
         let data = await getData(key);
-        data = data.map(dt => (dt.id === updateData.id ? updateData : dt));
+        data = data.map(dt => (dt.id === updatedData.id ? updatedData : dt));
         await AsyncStorage.setItem(key, JSON.stringify(data));
     } catch (e) {
         console.error(`Erro ao atualizar ${key}:`, e);
@@ -44,7 +45,7 @@ export const deleteData = async (key, id) => {
 export const getDataById = async (key, id) => {
     try {
         const data = await getData(key);
-        return data.find(dt => dt.id === id) || null;
+        return data.find(dt => dt.id == id) || null;
     } catch (e) {
         console.error(`Erro ao buscar ${id} em ${key}:`, e);
         return null;

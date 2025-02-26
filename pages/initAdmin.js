@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from '../styles/InitAdmin.module.css';
 import { FaEye, FaBars, FaUserCircle, FaTrash, FaEdit } from "react-icons/fa";
 
-import User from "../models/User";
+import UserController from "../controller/UserController";
 
 export default function initAdmin() {
     const [showForm, setShowForm] = useState(true);
@@ -37,66 +36,50 @@ export default function initAdmin() {
         setEditModalOpen(true);
     };
 
+    useEffect(() => {
+        fetchUsers();
+    }, []);
+
+    const fetchUsers = async () => {
+        const response = await UserController.listUsers();
+        setUsers(response);
+    };
+
     const handleAddUser = async () => {
-        const newUser = new User(
-            users.length + 1, name, role, email, password, new Date(), "active",
-        );
-
-        if(isDuplicate(newUser.email)) {
-            alert("Erro: Email já registrados no sistema!");
-            return;
+        const response = await UserController.createUser({ name, role, email, password });
+        if (response.error) {
+            alert(response.error);
+        } else {
+            fetchUsers();
+            alert("Usuário cadastrado com sucesso!");
+            setName(""); setRole(""); setEmail(""); setPassword("");
         }
-
-        const updatedUsers = [...users, newUser];
-        setUsers(updatedUsers);
-        await AsyncStorage.setItem('users', JSON.stringify(updatedUsers));
-        setName(""); setRole(""); setEmail(""); setPassword("");
-        alert("Cadastro realizado com sucesso!");
     };
 
     const handleDeleteUser = async () => {
-        const updatedUsers = users.filter((user) => user.id !== selectedUser.id);
-        setUsers(updatedUsers);
-        await AsyncStorage.setItem('users', JSON.stringify(updatedUsers));
-        handleCloseModal();
-        alert("Exclusão realizada com sucesso!");
+        const response = await UserController.deleteUser(selectedUser.id);
+        if (response.error) {
+            handleCloseModal();
+            alert(response.error);
+        } else {
+            fetchUsers();
+            handleCloseModal();
+            alert("Usuário excluído!");
+        }
     };
 
     const handleUpdateUser = async () => {
-        if(isDuplicate(editUser.email, editUser.id)) {
-            alert("Erro: CPF ou email já registrados no sistema!");
-            return;
+        const response = await UserController.updateUser(editUser);
+
+        if (response.error) {
+            alert(response.error);
+        } else {
+            fetchUsers();
+            setEditModalOpen(false);
+            handleCloseModal();
+            alert("Usuário atualizado com sucesso!");
         }
-
-        const updatedUsers = users.map(user =>
-            user.id === editUser.id ? editUser : user
-        );
-        setUsers(updatedUsers);
-        await AsyncStorage.setItem('users', JSON.stringify(updatedUsers));
-        setEditModalOpen(false);
-        handleCloseModal();
-        alert("Alteração realizada com sucesso!");
     };
-
-    const isDuplicate = (email, userId = null) => {
-        return users.some(user =>
-            (user.email === email) && user.id != userId
-        );
-    };
-
-    // Carregar usuários do AsyncStorage ao iniciar.
-    useEffect(() => {
-        const loadData = async () => {
-            try {
-                const storedUsers = await AsyncStorage.getItem('users');
-                setUsers(storedUsers ? JSON.parse(storedUsers) : []);
-            } catch (error) {
-                console.error("Erro ao carregar dados do AsyncStorage:", error);
-            }
-        };
-
-        loadData();
-    }, []);
 
     return (
         <main className={styles.container}>
