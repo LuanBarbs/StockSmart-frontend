@@ -1,0 +1,387 @@
+.container {
+    display: flex;
+    font-family: Arial, sans-serif;
+}
+
+.initialTitle {
+    height: 90vh;
+}
+
+.drawer {
+    width: 250px;
+    background-color: var(--darkGray);
+    color: var(--white);
+    padding: 15px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.drawer h2 {
+    text-align: center;
+    color: var(--orange);
+    margin-bottom: 30px;
+}
+
+.drawer ul {
+    list-style: none;
+    padding: 0;
+}
+
+.drawer li {
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.drawer li:hover {
+    background-color: var(--orange);
+    color: var(--black)
+}
+
+.liClicked {
+    background-color: var(--orange);
+    color: var(--black)
+}
+
+.mainContent {
+    flex-grow: 1;
+    background-color: var(--lightGray);
+    padding: 20px;
+}
+
+.mainContent h1 {
+    color: var(--darkGray);
+    font-size: 2em;
+}
+
+.wContainer {
+    padding: 20px;
+}
+
+.tabs {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.tabButton {
+    padding: 10px 20px;
+    cursor: pointer;
+    background-color: var(--orange);
+    border: 1px solid var(--darkOrange);
+    font-size: 18px;
+    border-radius: 5px;
+}
+
+.tabButton:hover {
+    padding: 10px 20px;
+    cursor: pointer;
+    background-color: var(--darkOrange);
+    border: 1px solid var(--darkOrange);
+    font-size: 18px;
+    border-radius: 5px;
+}
+
+.content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.content h1 {
+    color: var(--white);
+    font-size: 23px;
+}
+
+.formContainer,
+.warehousesContainer {
+    width: 45%;
+    background-color: var(--darkGray);
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    animation: slide-down 0.5s ease;
+}
+
+.fullFormContainer,
+.fullWarehousesContainer {
+    width: 70%;
+    background-color: var(--darkGray);
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    animation: slide-down 0.5s ease;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form label {
+    margin-top: 10px;
+    margin-bottom: 5px;
+    font-size: 18px;
+}
+
+.form input {
+    margin-bottom: 20px;
+    height: 6vh;
+    text-align: left;
+    font-size: 16px;
+    border: 1px solid #2c2c2c;
+    border-radius: 10px;
+    background-color: var(--gray);
+    color: var(--beige);
+}
+
+.form input:focus {
+    outline: none;
+    border-color: var(--orange);
+}
+
+.form select {
+    margin-bottom: 20px;
+    height: 6vh;
+    text-align: left;
+    font-size: 16px;
+    border: 1px solid #2c2c2c;
+    border-radius: 10px;
+    background-color: var(--gray);
+    color: var(--beige);
+}
+
+.form select:focus {
+    outline: none;
+    border-color: var(--orange);
+}
+
+.addZoneButton {
+    align-self: center;
+    width: 30%;
+    padding: 5px;
+    border: none;
+    border-radius: 15px;
+    background-color: var(--black);
+    color: var(--orange);
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.addZoneButton:hover {
+    background-color: var(--gray);
+}
+
+.removeZoneButton {
+    align-self: center;
+    width: 20%;
+    padding: 5px;
+    border: none;
+    border-radius: 15px;
+    background-color: var(--black);
+    color: var(--orange);
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    margin-left: 10px;
+    margin-bottom: 20px;
+}
+
+.removeZoneButton:hover {
+    background-color: var(--gray);
+}
+
+.submitButton {
+    align-self: center;
+    width: 40%;
+    padding: 10px;
+    border: none;
+    border-radius: 15px;
+    background-color: var(--orange);
+    color: var(--beige);
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.submitButton:hover {
+    background-color: var(--darkOrange);
+}
+
+.warehouseBox {
+    display: flex;
+    align-items: center;
+    padding: 4px 4px 4px 15px;
+    margin-bottom: 20px;
+    height: 5vh;
+    text-align: left;
+    font-size: 18px;
+    border: 1px solid #2c2c2c;
+    border-radius: 10px;
+    background-color: var(--gray);
+    color: var(--beige);
+}
+
+.eyeButton {
+    cursor: pointer;
+    background: none;
+    border: none;
+    color: var(--orange);
+    font-size: 20px;
+    margin-top: 4px;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--black);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modalContent {
+    background: var(--white);
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    width: 80%;
+    max-width: 500px;
+    position: relative;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.modalContent p {
+    color: var(--darkGray);
+}
+
+.modalContent h2 {
+    font-size: 20px;
+}
+
+.closeButton {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.modalActions button {
+    width: 30%;
+    margin: 10px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 15px;
+    background-color: var(--orange);
+    color: var(--beige);
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.modalActions button:hover {
+    background-color: var(--darkOrange);
+}
+
+.modalContent form {
+    display: flex;
+    flex-direction: column;
+}
+
+.modalContent form label {
+    margin-top: 10px;
+    margin-bottom: 5px;
+    font-size: 18px;
+    align-self: flex-start;
+}
+
+.modalContent form input {
+    text-align: left;
+    font-size: 16px;
+    padding: 4px;
+    border: 1px solid #2c2c2c;
+    border-radius: 10px;
+    background-color: var(--gray);
+    color: var(--beige);
+}
+
+.modalContent form input:focus {
+    outline: none;
+    border-color: var(--orange);
+}
+
+.modalContent form select {
+    margin-bottom: 20px;
+    height: 6vh;
+    text-align: left;
+    font-size: 16px;
+    border: 1px solid #2c2c2c;
+    border-radius: 10px;
+    background-color: var(--gray);
+    color: var(--beige);
+}
+
+.modalContent form select:focus {
+    outline: none;
+    border-color: var(--orange);
+}
+
+@keyframes slide-down {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.selectButton {
+    background-color: var(--orange);
+    color: var(--beige);
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.selectButton:hover {
+    background-color: #218838;
+}
+
+.backButton {
+    background: var(--orange);
+    color: var(--beige);
+    font-size: 16px;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 15px;
+    display: block;
+    width: fit-content;
+}
+
+.backButton:hover {
+    background: #cc0000;
+}

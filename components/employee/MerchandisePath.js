@@ -8,7 +8,7 @@ import {
   FaBox,
 } from "react-icons/fa";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import styles from "../../styles/InitManager.module.css";
+import styles from "../../styles/MerchandisePath.module.css";
 
 export default function MerchandisePath() {
   const [showForm, setShowForm] = useState(true);
@@ -18,8 +18,8 @@ export default function MerchandisePath() {
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editItem, setEditItem] = useState(null);
 
-  const [name, setName] = useState("");
-  const [quantity, setQuantity] = useState(0);
+  /*const [name, setName] = useState("");
+  const [quantity, setQuantity] = useState(0);*/
   const [warehouseId, setWarehouseId] = useState(null);
   const [category, setCategory] = useState(null);
 
@@ -96,7 +96,8 @@ export default function MerchandisePath() {
                             <select id="remessa">
                                 <option value="">Selecione uma remessa</option>
                             </select>
-
+                            
+                            <button className={styles.tabButton}>Salvar</button>
                             <div htmlFor="items"></div>
                         </form>
           )}

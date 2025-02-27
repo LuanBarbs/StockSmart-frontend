@@ -1,37 +1,40 @@
 import React, { useState, useEffect } from "react";
-import styles from '../../styles/ConsultHistory.module.css';
+import styles from "../../styles/SimplifiedReport.module.css";
+import ItemController from "../../controller/ItemController";
 
 export default function SimplifiedReport() {
   const [history, setHistory] = useState([]);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [location, setLocation] = useState("");
-  const [filteredHistory, setFilteredHistory] = useState([]);
+  const [filteredItems, setFilteredItems] = useState([]);
+  const [warehouseId, setWarehouseId] = useState(null);
+  const [warehouses, setWarehouses] = useState([]);
+  const [items, setItems] = useState([]);
 
+  const loadItems = async () => {
+    const storedItems = await ItemController.listItems();
+    setItems(storedItems);
+  };
   useEffect(() => {
-    const fetchHistory = async () => {
-      const response = await fetch("/api/getHistory");
-      const data = await response.json();
-      setHistory(data.history);
-    };
-
-    fetchHistory();
+    loadItems();
   }, []);
 
   useEffect(() => {
-    const filtered = history.filter((item) => {
-      const itemDate = new Date(item.date);
+    const filtered = items.filter((item) => {
+      const itemDate = new Date(item.createdDate);
       const start = startDate ? new Date(startDate) : new Date("1900-01-01");
       const end = endDate ? new Date(endDate) : new Date();
       const isDateInRange = itemDate >= start && itemDate <= end;
       const isLocationMatch = location
-        ? item.location.includes(location)
+        ? item.warehouseId.includes(location)
         : true;
       return isDateInRange && isLocationMatch;
     });
 
-    setFilteredHistory(filtered);
+    setFilteredItems(filtered);
   }, [startDate, endDate, location, history]);
+
 
   return (
     <div className={styles.container}>
@@ -56,17 +59,23 @@ export default function SimplifiedReport() {
           />
         </label>
         <label className={styles.label}>
-          <p>Localização:</p>
-          <input
-            className={styles.input}
-            type="text"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-            placeholder="Digite a localização"
-          />
+          <p>Armazém:</p>
+          <select
+            className={styles.select}
+            id="warehouseId"
+            value={warehouseId}
+            onChange={(e) => setWarehouseId(e.target.value)}
+          >
+            <option value="">Selecione um armazém</option>
+            {warehouses.map((warehouse, index) => (
+              <option key={index} value={warehouse.id}>
+                {warehouse.id} - {warehouse.name}
+              </option>
+            ))}
+          </select>
         </label>
-        
-              <button className={styles.tabButton}>Gerar Relatório</button>
+
+        <button className={styles.tabButton}>Gerar Relatório</button>
       </div>
 
       <div className={styles.history}>
@@ -77,9 +86,21 @@ export default function SimplifiedReport() {
               <th>ID</th>
               <th>Ação</th>
               <th>Data</th>
+              <th>Localização</th>
               <th>Status</th>
             </tr>
           </thead>
+          <tbody>
+            {filteredItems.map((item) => (
+              <tr key={item.id}>
+                <td>{item.id}</td>
+                <td>{item.name}</td>
+                <td>{new Date(item.date).toLocaleDateString()}</td>
+                <td>{item.location}</td>
+                <td>{item.status}</td>
+              </tr>
+            ))}
+          </tbody>
         </table>
       </div>
     </div>
