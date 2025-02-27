@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import styles from '../../styles/CloseOperations.module.css';
+
+import CloseOperationsController from '../../controller/CloseOperationsController';
 
 export default function CloseOperations() {
     const [balance, setBalance] = useState([]);
     const [filteredBalance, setFilteredBalance] = useState([]);
+    const [expiredItems, setExpiredItems] = useState([]);
     const [period, setPeriod] = useState('daily');
     const [status, setStatus] = useState('');
     const [warehouses, setWarehouses] = useState([]);
@@ -13,50 +15,54 @@ export default function CloseOperations() {
     const [filterCategory, setFilterCategory] = useState('');
     const [filterStatus, setFilterStatus] = useState('');
 
-    const handleCloseOperations = async () => {
-        try {
-            const response = await fetch('/api/closeOperations', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ period, warehouseId: selectedWarehouse }),
-            })
+    const [itensBalance, setItensBalance] = useState(0);
 
-            if(response.ok) {
-                setStatus('Operação de fechamento realizada com sucesso!');
-            } else {
-                setStatus('Erro ao realizar operação de fechamento.');
+    const [closedOperations, setClosedOperations] = useState(false);
+
+    const handleCloseOperations = async () => {
+        if (expiredItems.length > 0) {
+            if (!window.confirm("Existem itens expirados! Deseja continuar?")) {
+                return;
             }
-        } catch (error) {
-            setStatus('Erro ao realizar operação de fechamento.');
+        }
+        const response = await CloseOperationsController.closeOperations(filteredBalance, period, selectedWarehouse);
+        if (response.error) {
+            alert(response.error);
+        } else {
+            setClosedOperations(true);
+            setStatus("Operações fechadas com sucesso!");
         }
     };
 
     // Carregar os dados iniciais do saldo.
-    useEffect(() => {
-        const fetchData = async () => {
-            const response = await fetch('/api/getBalance');
-            const data = await response.json();
-            setBalance(data.items);
-            setFilteredBalance(data.items);
-        }
+    const fetchBalance = async () => {
+        const response = await CloseOperationsController.getBalance();
 
-        fetchData();
+        if(response.error) {
+            alert(response.error);
+        } else {
+            setBalance(response);
+            setFilteredBalance(response);
+            setExpiredItems(response.filter(item => new Date(item.expirationDate) < new Date()));
+            setItensBalance(response.reduce((sum, item) => sum + parseInt(item.quantity), 0));
+        }
+    };
+    useEffect(() => {
+        fetchBalance();
     }, []);
 
-    // Carregar depósitos do AsyncStorage ao iniciar.
-    useEffect(() => {
-        const loadData = async () => {
-            try {
-                const storedWarehouses = await AsyncStorage.getItem('warehouses');
-                setWarehouses(storedWarehouses ? JSON.parse(storedWarehouses) : []);
-            } catch (error) {
-                console.error("Erro ao carregar dados do AsyncStorage: ", error);
-            }
-        };
+    // Carregar depósitos ao iniciar.
+    const loadWarehouses = async () => {
+        const response = await CloseOperationsController.getWarehouses();
 
-        loadData();
+        if(response.error) {
+            alert(response.error);
+        } else {
+            setWarehouses(response);
+        }
+    };
+    useEffect(() => {
+        loadWarehouses();
     }, []);
 
     useEffect(() => {
@@ -90,6 +96,64 @@ export default function CloseOperations() {
     return (
         <div className={styles.container}>
             <h1 className={styles.title}>Fechar Operações</h1>
+            <h3>Total de Itens: {itensBalance} (Expirados: {expiredItems.length})</h3>
+            {expiredItems.length > 0 && <p className={styles.alert}>⚠️ Há itens expirados!</p>}
+            
+            <div className={styles.label}>
+                <h2>Filtros</h2>
+                <input 
+                    type="text"
+                    placeholder="Buscar por nome"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className={styles.input}
+                />
+                <input 
+                    type="text"
+                    placeholder="Filtrar por categoria"
+                    value={filterCategory}
+                    onChange={(e) => setFilterCategory(e.target.value)}
+                    className={styles.input}
+                />
+                <input 
+                    type="text"
+                    placeholder="Filtrar por status"
+                    value={filterStatus}
+                    onChange={(e) => setFilterStatus(e.target.value)}
+                    className={styles.input}
+                />
+            </div>
+
+            <div className={styles.balance}>
+                <h2>{closedOperations ? "Saldo Anterior" : "Saldo Atual"}: {itensBalance}</h2>
+                <table className={styles.table}>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Quantidade</th>
+                            <th>Categoria</th>
+                            <th>Volume</th>
+                            <th>Data de Validade</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {filteredBalance.map((item) => (
+                            <tr key={item.id} className={new Date(item.expirationDate) < new Date() ? styles.expired : ""}>
+                                <td>{item.id}</td>
+                                <td>{item.name}</td>
+                                <td>{item.quantity}</td>
+                                <td>{item.category}</td>
+                                <td>{item.volume}</td>
+                                <td>{new Date(item.expirationDate).toLocaleDateString()}</td>
+                                <td>{item.status}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
             <h3>Definir período e armazém:</h3>
             <div>
                 <label className={styles.label}>
@@ -121,61 +185,6 @@ export default function CloseOperations() {
                         ))}
                     </select>
                 </label>
-            </div>
-            
-            <div className={styles.label}>
-                <h2>Filtros</h2>
-                <input 
-                    type="text"
-                    placeholder="Buscar por nome"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className={styles.input}
-                />
-                <input 
-                    type="text"
-                    placeholder="Filtrar por categoria"
-                    value={filterCategory}
-                    onChange={(e) => setFilterCategory(e.target.value)}
-                    className={styles.input}
-                />
-                <input 
-                    type="text"
-                    placeholder="Filtrar por status"
-                    value={filterStatus}
-                    onChange={(e) => setFilterStatus(e.target.value)}
-                    className={styles.input}
-                />
-            </div>
-
-            <div className={styles.balance}>
-                <h2>Saldo Atual</h2>
-                <table className={styles.table}>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nome</th>
-                            <th>Quantidade</th>
-                            <th>Categoria</th>
-                            <th>Volume</th>
-                            <th>Data de Validade</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {filteredBalance.map((item) => (
-                            <tr key={item.id}>
-                                <td>{item.id}</td>
-                                <td>{item.name}</td>
-                                <td>{item.quantity}</td>
-                                <td>{item.category}</td>
-                                <td>{item.volume}</td>
-                                <td>{new Date(item.expirationDate).toLocaleDateString()}</td>
-                                <td>{item.status}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
             </div>
             
             <button className={styles.button} onClick={handleCloseOperations}>Fechar Operações</button>
