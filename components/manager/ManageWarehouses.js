@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { FaEye, FaBars, FaPlusSquare, FaTrash, FaEdit, FaWarehouse } from "react-icons/fa";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import styles from "../../styles/InitManager.module.css";
 
 import Warehouse from "../../models/Warehouse";
 import WarehouseController from "../../controller/WarehouseController";
 import HistoryController from "../../controller/HistoryController";
 import UserController from "../../controller/UserController";
+import StorageRulesController from "../../controller/StorageRulesController";
 
 export default function ManageWarehouses() {
     const [showForm, setShowForm] = useState(true);
@@ -15,6 +15,8 @@ export default function ManageWarehouses() {
     const [selectedWarehouse, setSelectedWarehouse] = useState(null);
     const [editModalOpen, setEditModalOpen] = useState(false);
     const [editWarehouse, setEditWarehouse] = useState(null);
+
+    const [storageRules, setStorageRules] = useState([]);
 
     const [name, setName] = useState("");
     const [location, setLocation] = useState("");
@@ -26,7 +28,6 @@ export default function ManageWarehouses() {
 
     const [users, setUsers] = useState([]);
 
-    // Carregar depósitos ao iniciar.
     const loadWarehouses = async () => {
         const storedWarehouses = await WarehouseController.listWarehouses();
         setWarehouses(storedWarehouses);
@@ -35,7 +36,6 @@ export default function ManageWarehouses() {
         loadWarehouses();
     }, []);
 
-    // Carregar usuários ao iniciar.
     useEffect(() => {
         const fetchUsers = async () => {
             const response = await UserController.listUsers();
@@ -44,6 +44,24 @@ export default function ManageWarehouses() {
 
         fetchUsers();
     }, []);
+
+    const loadStorageRules = async () => {
+        const rules = await StorageRulesController.getStorageRules();
+        setStorageRules(rules);
+    };
+
+    useEffect(() => {
+        loadStorageRules();
+    }, []);
+
+    const handleSaveStorageRules = async () => {
+        const response = await StorageRulesController.saveStorageRules(storageRules);
+        if (response.error) {
+            alert(response.error);
+        } else {
+            alert("Regras de armazenagem salvas com sucesso!");
+        }
+    };
 
     const handleToggleForm = () => setShowForm(!showForm);
     const handleToggleWarehouses = () => setShowWarehouses(!showWarehouses);
@@ -67,7 +85,6 @@ export default function ManageWarehouses() {
         setZones(warehouse.zones);
     };
 
-    // Função para adicionar um armazém.
     const handleAddWarehouse = async () => {
         if (capacity <= 0) {
             alert("Erro: Todos os valores numéricos devem ser maiores que zero.");
@@ -146,7 +163,6 @@ export default function ManageWarehouses() {
         }
     };
 
-    // Função para adicionar uma nova zona.
     const handleAddZone = () => {
         if(zoneName.trim()) {
             setZones([...zones, zoneName]);
@@ -154,7 +170,6 @@ export default function ManageWarehouses() {
         }
     };
 
-    // Remove uma zona existente.
     const handleRemoveZone = (index) => {
         setZones(zones.filter((_, i) =>  i !== index));
     };
@@ -204,7 +219,6 @@ export default function ManageWarehouses() {
                                 required
                             />
                             
-                            {/* Gerenciamento de Zonas */}
                             <label htmlFor="zones">Zonas:</label>
                             <select
                                 id="role"
@@ -317,7 +331,6 @@ export default function ManageWarehouses() {
                                 onChange={(e) => setEditWarehouse({ ...editWarehouse, capacity: e.target.value })}
                             />
 
-                            {/* Gerenciamento de Zonas */}
                             <label htmlFor="zones">Zonas:</label>
                             <select
                                 id="role"
@@ -360,4 +373,4 @@ export default function ManageWarehouses() {
             )}
         </main>
     );
-};
+}
