@@ -123,7 +123,7 @@ export default function ManageItems() {
 
             HistoryController.createHistory({
                 action: `Criação do Item: "${newItem.name}"`,
-                userName: users[0].name || null,
+                userName: users[0] ? users[0].name : null,
                 userRole: "Funcionário",
                 location: `Id do Armazém: ${warehouseId}`,
                 description: `Criação do Item "${newItem.name}" com volume de ${newItem.volume} m^3`,
@@ -143,7 +143,7 @@ export default function ManageItems() {
 
             HistoryController.createHistory({
                 action: `Remoção do Item: "${response.name}"`,
-                userName: users[0].name || null,
+                userName: users[0] ? users[0].name : null,
                 userRole: "Funcionário",
                 location: `Id do Armazém: ${response.warehouseId}`,
                 description: "",

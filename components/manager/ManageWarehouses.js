@@ -92,7 +92,7 @@ export default function ManageWarehouses() {
             
             HistoryController.createHistory({
                 action: `Criação do Armazém: "${newWarehouse.name}"`,
-                userName: users[0].name || null,
+                userName: users[0] ? users[0].name : null,
                 userRole: "Gerente",
                 location: newWarehouse.location,
                 description: `Criação do Armazém "${newWarehouse.name}" com capacidade de ${newWarehouse.capacity} m^3`,
@@ -112,7 +112,7 @@ export default function ManageWarehouses() {
 
             HistoryController.createHistory({
                 action: `Remoção do Armazém: "${response.name}"`,
-                userName: users[0].name || null,
+                userName: users[0] ? users[0].name : null,
                 userRole: "Gerente",
                 location: response.location,
                 description: "",
