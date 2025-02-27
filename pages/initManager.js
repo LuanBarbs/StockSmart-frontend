@@ -7,7 +7,7 @@ import CloseOperations from "../components/manager/CloseOperations";
 import ConsultHistory from "../components/ConsultHistory";
 import BoardingPriority from "../components/manager/BoardingPriority";
 import SimplifiedReport from "../components/manager/SimplifiedReport";
-
+import DefineStorageRules from "../components/manager/DefineStorageRules";
 export default function initManager() {
     const [activeFeature, setActiveFeature] = useState("default");
 
@@ -20,7 +20,7 @@ export default function initManager() {
           case "GCD":
             return <ManageWarehouses />;
           case "DRA":
-            return <h1>Ainda não está pronto!</h1>;
+            return <DefineStorageRules />;
           case "CH":
             return <ConsultHistory />;
           case "COE":
