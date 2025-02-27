@@ -1,6 +1,6 @@
 // Classe para Remessas.
 export default class Shipment {
-    constructor(id, type, items, status, supplier, destination, creationDate) {
+    constructor(id, type, items, status, supplier, destination, creationDate, quantity) {
         this.id = id;                       // Identificador único da remessa.
         this.type = type;                   // Tipo: Recebimento, Expedição, etc.
         this.items = items;                 // Lista de itens envolvidos.
@@ -8,6 +8,7 @@ export default class Shipment {
         this.supplier = supplier;           // Fornecedor da remessa.
         this.destination = destination;     // Local de destino.
         this.creationDate = creationDate;   // Data de criação.
+        this.quantity = quantity;
     };
 
     // Adicionar um item à remessa.

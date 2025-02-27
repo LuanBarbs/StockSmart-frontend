@@ -9,6 +9,7 @@ export default function BoardingPriority() {
 
   const loadShipment = async () => {
     const storedShipment = await ShipmentController.listShipments();
+
     setShipment(storedShipment);
   };
   useEffect(() => {

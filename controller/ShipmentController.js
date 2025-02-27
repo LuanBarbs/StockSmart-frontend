@@ -11,9 +11,7 @@ class ShipmentController {
         }
     };
 
-    static async createShipments(req) {
-        const { type, itemName, status, supplier, destination, creationDate, quantity } = req;
-        
+    static async createShipments(type, itemName, status, supplier, destination, creationDate, quantity) {        
         try {
             const shipments = await getShipments();
 
