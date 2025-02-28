@@ -20,10 +20,12 @@ export default function BoardingPriority() {
   const listShipment = async () => {
     const shipment = await ShipmentController.listShipments();
     if (option === "prazo") {
-      shipment.sort((a,b) => b.type - a.type)
+      let sp = shipment.sort((a,b) => b.type - a.type)
+      setShipments(sp);
     }
     else if (option === "maior_remessa") {
-      shipment.sort((a, b) => b.quantity - a.quantity);      
+      let sp = shipment.sort((a, b) => b.quantity - a.quantity);   
+      setShipments(sp);
     }
   };
 
@@ -39,7 +41,7 @@ export default function BoardingPriority() {
               <select id="option" value={option} onChange={(e) => setOption(e.target.value)}>
                 <option value="">Selecione uma ordem de prioridade</option>
                 <option value="prazo">Prazo</option>
-                <option value="remessa">Maior Remessa</option>
+                <option value="maior_remessa">Maior Remessa</option>
               </select>
               <button className={styles.tabButton} onClick={listShipment} type="submit">
                 Definir Prioridade
@@ -51,7 +53,7 @@ export default function BoardingPriority() {
         <section className={styles.fullFormContainer}>
           <div className={styles.table}>
             {shipments.map((ship, index) =>
-              <p>{ship.type} - {ship.itemName}</p>
+              <p key={index}>{ship.type} - {ship.items}</p>
             )}
           </div>
         </section>
