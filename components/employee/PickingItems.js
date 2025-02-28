@@ -61,6 +61,9 @@ export default function PickingItems() {
     };
 
     const handleEndListSelectedItems = () =>{
+        for (const item of selectedItems) {
+            ItemController.deleteItem(item.id);
+        }
         setSelectedItems([]); // Define a lista como vazia
         setShowItems(false);
         setShowWarehousesOrigin(true);

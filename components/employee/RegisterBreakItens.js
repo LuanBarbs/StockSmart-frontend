@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { FaEye, FaBars, FaPlusSquare, FaTrash, FaEdit, FaWarehouse } from "react-icons/fa";
+import { FaEye, FaBars, FaPlusSquare, FaTrash, FaEdit, FaWarehouse, FaBox } from "react-icons/fa";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import styles from "../../styles/InitManager.module.css";
 import Item from "../../models/Item";
 import ItemController from "../../controller/ItemController";
 import Warehouse from "../../models/Warehouse";
+import HistoryController from "../../controller/HistoryController";
+import UserController from "../../controller/UserController";
 
 export default function RegisterBreakItems() {
 
@@ -27,7 +29,8 @@ export default function RegisterBreakItems() {
 
     const [description, setDescription] = useState(""); // Estado inicial vazio   
     
-    
+    const [users, setUsers] = useState([]);
+
     const [warehouses, setWarehouses] = useState([]);
     const [showWarehousesOrigin, setShowWarehousesOrigin] = useState(true);
     const [selectedWarehouse, setSelectedWarehouse] = useState(null);
@@ -64,7 +67,29 @@ export default function RegisterBreakItems() {
             alert("Erro: Todos os campos devem ser preenchidos corretamente.");
             return;
         }
+        
+        //  novo item: igual ao anterior, com a quantidade inserida, status de defeito
+        const itemQuebrado = new Item(null, editItem.name, editItem.quantity, editItem.warehouseId, editItem.category, editItem.volume, editItem.expirationDate, editItem.createdAt, "damaged");
+        
+        const response = await ItemController.createItem(itemQuebrado);
+        if (response.error) {
+            alert(response.error);
+        } else {
+            loadItems();
 
+            HistoryController.createHistory({
+                action: `Alteração do Item: "${itemQuebrado.name}"`,
+                userName: users[0] ? users[0].name : null,
+                userRole: "Funcionário",
+                location: `Id do Armazém: ${itemQuebrado.warehouseId}`,
+                description: `Alteração do Item "${itemQuebrado.name}" com status de ${itemQuebrado.status}`,
+            });
+        }
+        //  diminuir quantidade do item anterior
+        const itemSendoRegistrado = allItems.filter(item => Number(item.id) === Number(editItem.id));
+        itemSendoRegistrado.quantity -= itemQuebrado.quantity;
+        await ItemController.updateItem(editItem);
+        
         const updatedItems = items.map(item =>
             item.id === editItem.id ? editItem : item
         );
@@ -133,6 +158,16 @@ export default function RegisterBreakItems() {
     };
     useEffect(() => {
         loadItems();
+    }, []);
+
+    // Carregar usuários ao iniciar.
+    useEffect(() => {
+        const fetchUsers = async () => {
+            const response = await UserController.listUsers();
+            setUsers(response);
+        };
+
+        fetchUsers();
     }, []);
 
     return (
