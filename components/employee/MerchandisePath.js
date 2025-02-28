@@ -9,6 +9,7 @@ import {
 } from "react-icons/fa";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import styles from "../../styles/MerchandisePath.module.css";
+import ShipmentController from "../../controller/ShipmentController";
 
 export default function MerchandisePath() {
   const [showForm, setShowForm] = useState(true);
@@ -26,9 +27,19 @@ export default function MerchandisePath() {
   const [items, setItems] = useState([]);
 
   const [warehouses, setWarehouses] = useState([]);
+  const [shipments, setShipments] = useState([]);
 
   const handleToggleForm = () => setShowForm(!showForm);
   const handleToggleItems = () => setShowItems(!showItems);
+
+  const loadShipment = async () => {
+    const storedShipment = await ShipmentController.listShipments();
+
+    setShipments(storedShipment);
+  };
+  useEffect(() => {
+    loadShipment();
+  }, []);
 
   const handleOpenItemModal = (item) => {
     setSelectedItem(item);
@@ -94,7 +105,12 @@ export default function MerchandisePath() {
 
                             <label htmlFor="remessa">Remessa</label>
                             <select id="remessa">
-                                <option value="">Selecione uma remessa</option>
+                              <option value="">Selecione uma remessa</option>
+                              {shipments.map((shipment, index) => (
+                                <option key={index} value={shipment.itemName}>
+                                  {shipment.itemName}
+                                </option>
+                              ))}
                             </select>
                             
                             <button className={styles.tabButton}>Salvar</button>
