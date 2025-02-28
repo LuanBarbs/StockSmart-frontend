@@ -51,19 +51,29 @@ export default function MoveItems() {
     };
 
     const handleUpdateItem = async () => {
-        if (editItem.quantity <= 0 || !editItem.name || !editItem.warehouseId || !editItem.category || !editItem.volume || !editItem.expirationDate) {
+        if (
+            editItem.quantity <= 0 ||
+            !editItem.name ||
+            !editItem.warehouseId ||
+            !editItem.category ||
+            !editItem.volume ||
+            !editItem.expirationDate
+        ) {
             alert("Erro: Todos os campos devem ser preenchidos corretamente.");
             return;
         }
 
-        const updatedItems = items.map(item =>
-            item.id === editItem.id ? editItem : item
-        );
-        setItems(updatedItems);
-        await AsyncStorage.setItem('items', JSON.stringify(updatedItems));
+        const response = await ItemController.updateItem(editItem);
+        if (response.error) {
+            alert(response.error);
+        } else {
+            loadItems();
+            alert("Movimentação realizada com sucesso!");
+        }
         setSelectDestinyModalOpen(false);
         handleCloseModal();
-        alert("Movimentação realizada com sucesso!");
+        backSelectWarehouse()
+        
     };
 
     const backSelectWarehouse = () => {
