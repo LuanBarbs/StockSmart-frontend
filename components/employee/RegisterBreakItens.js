@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { FaEye, FaBars, FaPlusSquare, FaTrash, FaEdit, FaWarehouse } from "react-icons/fa";
+import { FaEye, FaBars, FaPlusSquare, FaTrash, FaEdit, FaWarehouse, FaBox } from "react-icons/fa";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import styles from "../../styles/InitManager.module.css";
 import Item from "../../models/Item";
+import ItemController from "../../controller/ItemController";
 import Warehouse from "../../models/Warehouse";
+import HistoryController from "../../controller/HistoryController";
+import UserController from "../../controller/UserController";
 
 export default function RegisterBreakItems() {
 
@@ -26,12 +29,14 @@ export default function RegisterBreakItems() {
 
     const [description, setDescription] = useState(""); // Estado inicial vazio   
     
-    
+    const [users, setUsers] = useState([]);
+
     const [warehouses, setWarehouses] = useState([]);
     const [showWarehousesOrigin, setShowWarehousesOrigin] = useState(true);
     const [selectedWarehouse, setSelectedWarehouse] = useState(null);
    
     const [items, setItems] = useState([]);
+    const [allItems, setAllItems] = useState([]);
 
     const handleToggleItems = () => setShowItems(!showItems);
 
@@ -46,22 +51,9 @@ export default function RegisterBreakItems() {
     };
 
     const handleSelectWarehouse = (warehouse) => {
-        const newSelectedWarehouse = new Warehouse(
-            warehouse.id,
-            warehouse.name,
-            warehouse.location,
-            warehouse.capacity,
-            warehouse.currentCapacity,
-            warehouse.zones,
-            warehouse.status,
-            warehouse.createdAt,
-        );
-        setShowWarehousesOrigin(false);
-        const itemTeste1 = new Item(1, "Teste'", 10, 1, "Eletronico", 100, 12/1/2122, null, 1 );
-        const itemTeste2 = new Item(2, "Teste2'", 20, 1, "Teste", 200, 12/1/2122, null, 1 );
-        newSelectedWarehouse.addItem(itemTeste1);
-        newSelectedWarehouse.addItem(itemTeste2);
-        setItems(newSelectedWarehouse.items);
+        setShowWarehousesOrigin(false);   ;
+        const warehouseItens = allItems.filter(item => Number(item.warehouseId) === warehouse.id);
+        setItems(warehouseItens);
         setShowItems(true)
     };
 
@@ -75,7 +67,29 @@ export default function RegisterBreakItems() {
             alert("Erro: Todos os campos devem ser preenchidos corretamente.");
             return;
         }
+        
+        //  novo item: igual ao anterior, com a quantidade inserida, status de defeito
+        const itemQuebrado = new Item(null, editItem.name, editItem.quantity, editItem.warehouseId, editItem.category, editItem.volume, editItem.expirationDate, editItem.createdAt, "damaged");
+        
+        const response = await ItemController.createItem(itemQuebrado);
+        if (response.error) {
+            alert(response.error);
+        } else {
+            loadItems();
 
+            HistoryController.createHistory({
+                action: `Alteração do Item: "${itemQuebrado.name}"`,
+                userName: users[0] ? users[0].name : null,
+                userRole: "Funcionário",
+                location: `Id do Armazém: ${itemQuebrado.warehouseId}`,
+                description: `Alteração do Item "${itemQuebrado.name}" com status de ${itemQuebrado.status}`,
+            });
+        }
+        //  diminuir quantidade do item anterior
+        const itemSendoRegistrado = allItems.filter(item => Number(item.id) === Number(editItem.id));
+        itemSendoRegistrado.quantity -= itemQuebrado.quantity;
+        await ItemController.updateItem(editItem);
+        
         const updatedItems = items.map(item =>
             item.id === editItem.id ? editItem : item
         );
@@ -135,6 +149,25 @@ export default function RegisterBreakItems() {
         };
 
         loadData();
+    }, []);
+
+    // Caregar itens ao iniciar.
+    const loadItems = async () => {
+        const storedItems = await ItemController.listItems();
+        setAllItems(storedItems);
+    };
+    useEffect(() => {
+        loadItems();
+    }, []);
+
+    // Carregar usuários ao iniciar.
+    useEffect(() => {
+        const fetchUsers = async () => {
+            const response = await UserController.listUsers();
+            setUsers(response);
+        };
+
+        fetchUsers();
     }, []);
 
     return (

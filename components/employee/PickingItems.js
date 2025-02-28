@@ -3,6 +3,7 @@ import { FaEye, FaBars, FaPlusSquare, FaTrash, FaEdit, FaBox, FaWarehouse } from
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import styles from "../../styles/InitManager.module.css";
 import Item from "../../models/Item";
+import ItemController from "../../controller/ItemController";
 import Warehouse from "../../models/Warehouse";
 
 
@@ -22,6 +23,7 @@ export default function PickingItems() {
     const [showPickingItems, setShowPickingItems] = useState(true);
 
     const [items, setItems] = useState([]);
+    const [allItems, setAllItems] = useState([]);
     const [selectedItems, setSelectedItems] = useState([]);
 
     const handleToggleItems = () => setShowItems(!showItems);
@@ -37,22 +39,9 @@ export default function PickingItems() {
     };
 
     const handleSelectWarehouse = (warehouse) => {
-        const newSelectedWarehouse = new Warehouse(
-            warehouse.id,
-            warehouse.name,
-            warehouse.location,
-            warehouse.capacity,
-            warehouse.currentCapacity,
-            warehouse.zones,
-            warehouse.status,
-            warehouse.createdAt,
-        );
-        setShowWarehousesOrigin(false);
-        const itemTeste1 = new Item(1, "Teste'", 10, 1, "Eletronico", 100, 12/1/2122, null, 1 );
-        const itemTeste2 = new Item(2, "Teste2'", 20, 1, "Teste", 200, 12/1/2122, null, 1 );
-        newSelectedWarehouse.addItem(itemTeste1);
-        newSelectedWarehouse.addItem(itemTeste2);
-        setItems(newSelectedWarehouse.items);
+        setShowWarehousesOrigin(false);     ;
+        const warehouseItens = allItems.filter(item => Number(item.warehouseId) === warehouse.id);
+        setItems(warehouseItens);
         setShowPickingItems(false)
         setShowItems(true)
         setShowPickingItems(true)
@@ -72,6 +61,9 @@ export default function PickingItems() {
     };
 
     const handleEndListSelectedItems = () =>{
+        for (const item of selectedItems) {
+            ItemController.deleteItem(item.id);
+        }
         setSelectedItems([]); // Define a lista como vazia
         setShowItems(false);
         setShowWarehousesOrigin(true);
@@ -126,6 +118,15 @@ export default function PickingItems() {
         };
 
         loadData();
+    }, []);
+
+    // Caregar itens ao iniciar.
+    const loadItems = async () => {
+        const storedItems = await ItemController.listItems();
+        setAllItems(storedItems);
+    };
+    useEffect(() => {
+        loadItems();
     }, []);
 
     return (
