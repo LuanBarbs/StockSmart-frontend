@@ -42,7 +42,6 @@ export default function MoveItems() {
         setShowWarehousesOrigin(false);
         const warehouseItens = allItems.filter(item => Number(item.warehouseId) === warehouse.id);
         setItems(warehouseItens);
-        setItems(warehouse.items);
         setShowItems(true)
     };
 
